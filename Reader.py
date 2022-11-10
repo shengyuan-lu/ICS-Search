@@ -4,9 +4,13 @@ import json
 
 
 class Reader:
-    # Init with a base_folder
-    # call get_next_file() to get a tuple(doc_id, the actual JSON file)
-    # all other functions are internal or for testing purposes
+    # init the Reader class with a base_folder name
+
+    # call get_next_file() to get a tuple (doc_id, the actual JSON file)
+    # call get_num_of_file_processed() to get the number of files that are already processed
+    # call self.doc_id_dict.items() to get a list of tuples (doc_id : path_to_file)
+
+    # ** all other functions and variables are internal or for testing purposes **
 
     def __init__(self, base_folder):
 
@@ -25,16 +29,15 @@ class Reader:
 
         # A list of files under the current sub folder
         self.current_sub_folder_file_path_list = list()
-
         self.get_next_sub_folder()
 
-        # Track the doc id to be assigned
+        # Track the next doc id to be assigned (this also tracks the total number of files processed)
         self.next_doc_id_to_be_assigned = 1
 
         # Track the path that the doc id is assigned to
         self.doc_id_dict = dict()  # doc_id : path_to_file
 
-    def get_next_sub_folder(self):
+    def get_next_sub_folder(self) -> None:
         if len(self.current_sub_folder_file_path_list) == 0:
             sub_folder_path = self.sub_folder_file_path_list.pop()
 
@@ -45,21 +48,24 @@ class Reader:
                                                       file_name.endswith('.json') and os.path.isfile(
                                                           os.path.join(sub_folder_path, file_name))]
 
-    def print_not_processed_sub_folders(self):
+    def print_not_processed_sub_folders(self) -> None:
         for f in self.sub_folder_file_path_list:
             print(f)
 
-    def print_not_processed_files_in_current_sub_folder(self):
+    def print_not_processed_files_in_current_sub_folder(self) -> None:
         for f in self.current_sub_folder_file_path_list:
             print(f)
 
-    def print_process_doc_id_and_file(self):
+    def print_process_doc_id_and_file(self) -> None:
         print('doc_id : file_path')
 
         for doc_id, file_path in self.doc_id_dict.items():
             print(f'{doc_id} : {file_path}')
 
-    def get_next_file(self):
+    def get_num_of_file_processed(self) -> int:
+        return self.next_doc_id_to_be_assigned - 1
+
+    def get_next_file(self) -> (int, dict):  # returns (doc_id, processed_json_as_dict)
         if len(self.sub_folder_file_path_list) > 0 or len(self.current_sub_folder_file_path_list) > 0:
             # There are stuff left to be processed!
 
@@ -86,7 +92,7 @@ class Reader:
         else:
             # If there's no more files to be processed, raise exception
             raise NoMoreFilesToReadException(f'Reader has processed all files under folder {self.base_folder}. '
-                                             f'An exception has been raised to notify the main function.')
+                                             f'An exception has been raised to notify the main function to stop the loop.')
 
 
 # Custom Exception
@@ -94,7 +100,8 @@ class NoMoreFilesToReadException(Exception):
     pass
 
 
-# This part is just for testing the Reader class
+# ** This part is just for testing the Reader class **
+# Use the main function in Indexer.py to build the indexer with this class
 if __name__ == '__main__':
     reader = Reader('DEV')
 
@@ -108,4 +115,5 @@ if __name__ == '__main__':
     except NoMoreFilesToReadException as e:
         print(e)
 
-    ## reader.print_process_doc_id_and_file()
+    # reader.print_process_doc_id_and_file()
+    # print('Total number of files processed: ' + str(reader.get_num_of_file_processed()))
