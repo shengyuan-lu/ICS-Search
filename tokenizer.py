@@ -36,14 +36,17 @@ def compute_word_frequencies(textContent:str) -> 'dict':
                          'wouldn’t', 'you’d', 'her', "when's", 'themselves', "let's", 'hers', 'those', 'hasn’t', 'who',
                          'yours', "wasn't", 'other', 'and', 'who’s', 'too', "we'll"}
 
-    for token in token_list:
+    for token,idx in enumerate(token_list):
         if token in stop_word_set or len(token) < 2:
             continue
         if token in token_map.keys():
             token_map[token]["freq"] += 1
+            init_dict["pos"].add(idx)
         else:
             init_dict = dict()
             init_dict["freq"] = 1
+            init_dict["pos"] =set();
+            init_dict["pos"].add(idx)
             token_map[token] = init_dict
 
     return token_map
