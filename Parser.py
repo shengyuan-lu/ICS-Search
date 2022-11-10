@@ -37,6 +37,7 @@ if __name__ == '__main__':
         while True:
             file = reader.get_next_file()
             url, raw_text, doc_id = parse(file)
+            print("url:",url)
             # break
             print(compute_word_frequencies(raw_text))
 

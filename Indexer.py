@@ -9,7 +9,7 @@
 
 
 # IMPORT OTHER CLASSES HERE
-
+from Reader import Reader
 
 if __name__ == '__main__':
-    pass
+    reader = Reader('DEV')
