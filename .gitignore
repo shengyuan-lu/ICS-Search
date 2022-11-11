@@ -156,4 +156,4 @@ DEV/
 
 .DS_Store
 
-.json
+*.json

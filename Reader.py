@@ -91,8 +91,7 @@ class Reader:
 
         else:
             # If there's no more files to be processed, raise exception
-            raise NoMoreFilesToReadException(f'Reader has processed all files under folder {self.base_folder}. '
-                                             f'An exception has been raised to notify the main function to stop the loop.')
+            raise NoMoreFilesToReadException(f'Reader has processed all {self.get_num_of_file_processed()} files under folder {self.base_folder}.')
 
 
 # Custom Exception
