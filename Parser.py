@@ -1,30 +1,43 @@
 from Reader import Reader, NoMoreFilesToReadException
 from bs4 import BeautifulSoup
-from tokenizer import compute_word_frequencies
+from Tokenizer import compute_word_frequencies
 
 
-# parse(json : str): -> (url : str, html_text : str, doc_id : int)
-def parse(file: str) -> (str, str, int):
+# parse(file : (int, json_dict)): -> (url : str, html_text : str, doc_id : int)
+def parse(file: (int, dict)) -> (int, str, str):
     """
     Parses the loaded html file, extracting the url and raw text
     """
+    # Get the doc id from file
+    doc_id = file[0]
+
     # Get the json from the loaded file, as a dict
     json = file[1]
+
     # Get the url
     url = json["url"]
-    doc_id = file[0]
 
     # Get the raw html content
     content = json["content"]
 
     # Turn the raw html into tokenizable text
-    soup = BeautifulSoup(content, "html.parser")
-    text = soup.get_text().strip()
 
-    out = (url, text, doc_id)
-    # Return the url, the raw text content, and the doc_id
-    # In that order
-    return out
+    # Check if the html is valid
+    if BeautifulSoup(content, "html.parser").find():
+
+        soup = BeautifulSoup(content, "html.parser")
+
+        text = soup.get_text().strip()
+
+        # Return the doc_id, url, the raw text content
+        out = (doc_id, url, text)
+
+        return out
+
+    else:
+        out = (doc_id, url, '')
+
+        return out
 
 
 if __name__ == '__main__':
@@ -36,9 +49,8 @@ if __name__ == '__main__':
     try:
         while True:
             file = reader.get_next_file()
-            url, raw_text, doc_id = parse(file)
-            print("url:",url)
-            # break
+            doc_id, url, raw_text = parse(file)
+            print("url:", url)
             print(compute_word_frequencies(raw_text))
 
     except NoMoreFilesToReadException as e:
