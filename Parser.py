@@ -1,5 +1,6 @@
 from Reader import Reader, NoMoreFilesToReadException
 from bs4 import BeautifulSoup
+from tokenizer import compute_word_frequencies
 
 
 # parse(file : (int, json_dict)): -> (url : str, html_text : str, doc_id : int)
@@ -39,9 +40,10 @@ if __name__ == '__main__':
     try:
         while True:
             file = reader.get_next_file()
-            print(parse(file))
+            url, raw_text, doc_id = parse(file)
+            print("url:",url)
             # break
-            # print()
+            print(compute_word_frequencies(raw_text))
 
     except NoMoreFilesToReadException as e:
         print(e)
