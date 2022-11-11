@@ -1,7 +1,5 @@
 import re
 
-
-
 def tokenize(content: 'str') -> 'list':
 
     pattern = "[a-zA-Z0-9]+'?’?[a-zA-Z0-9]*"
@@ -9,6 +7,8 @@ def tokenize(content: 'str') -> 'list':
     return result
 
 
+# textContent = processed text from HTML
+# returns (token : {position (str) : int, occurrence (str) : int})
 def compute_word_frequencies(textContent:str) -> 'dict':
 
     token_map = dict();
@@ -36,7 +36,7 @@ def compute_word_frequencies(textContent:str) -> 'dict':
                          'wouldn’t', 'you’d', 'her', "when's", 'themselves', "let's", 'hers', 'those', 'hasn’t', 'who',
                          'yours', "wasn't", 'other', 'and', 'who’s', 'too', "we'll"}
 
-    for idx,token in enumerate(token_list):
+    for idx, token in enumerate(token_list):
         if token in stop_word_set or len(token) < 2:
             continue
         if token in token_map.keys():
