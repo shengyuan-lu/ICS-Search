@@ -3,8 +3,8 @@ from bs4 import BeautifulSoup
 from tokenizer import compute_word_frequencies
 
 
-# parse(json : str): -> (url : str, html_text : str, doc_id : int)
-def parse(file: str) -> (str, str, int):
+# parse(file : (int, json_dict)): -> (url : str, html_text : str, doc_id : int)
+def parse(file: (int, dict)) -> (int, str, str):
     """
     Parses the loaded html file, extracting the url and raw text
     """
@@ -18,10 +18,14 @@ def parse(file: str) -> (str, str, int):
     content = json["content"]
 
     # Turn the raw html into tokenizable text
+
     soup = BeautifulSoup(content, "html.parser")
+        # The html parser *should* handle errors in the html.
+        # Any errors BeautifulSoup decided were worth throwing
+        # Probably are
     text = soup.get_text().strip()
 
-    out = (url, text, doc_id)
+    out = (doc_id, url, text)
     # Return the url, the raw text content, and the doc_id
     # In that order
     return out
