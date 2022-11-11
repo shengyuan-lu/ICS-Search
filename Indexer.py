@@ -31,7 +31,9 @@ if __name__ == '__main__':
 
     except NoMoreFilesToReadException as e:
         print(e)
+
     # Write index to disk
     memory.store_to_disk()
+
     # Print the stats
     memory.print_stats()
