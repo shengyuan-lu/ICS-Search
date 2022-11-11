@@ -1,5 +1,5 @@
 import json
-
+from os.path import getsize
 
 class Memory:
 
@@ -10,6 +10,7 @@ class Memory:
         self.doc_count = 0
         self.index_file_num = 0
         self.max_doc_ct = 50
+        self.index_size = -1
 
 
     # this method will add the tokens from one page into the master dict
@@ -21,11 +22,12 @@ class Memory:
 
         # insert / update master dict with token
         for key,val in tok.items():
+            # TODO for M1, we only care about freq for any given file
             if key not in self.index:
-                self.index[key] = [[doc_id, val[0], val[1]]]
+                self.index[key] = [[doc_id, val["freq"]]]
             else:
-                self.index[key].append([doc_id, val[0], val[1]])
-        
+                self.index[key].append([doc_id, val["freq"]])
+
         # check if doc_count is at max_doc_ct and store to disk if so
         if self.doc_count == self.max_doc_ct:
             self.doc_count = 0
@@ -34,13 +36,38 @@ class Memory:
 
     # this method will store the index to a file on disk (not fully implemented yet to search through)
     def store_to_disk(self):
-
+        """
+        Writes the current in-memory index to disk
+        """
         # this check if the index have anything in it, and then only save to disk if there is something in it
-        if len(self.index) > 0:
-            with open(f"indexfile{self.index_file_num}.json", 'w') as file:
-                json.dump(self.index, file, sort_keys = True)
-            self.index_file_num += 1
-        
+        if len(self.index) <= 0:
+            return
+        with open(f"indexfile{self.index_file_num}.json", 'w') as file:
+            file.write('[')
+            srted = sorted(self.index.keys())
+            for item in srted:
+                if (item != srted[-1]):
+                    s = "{" + f'"{item}" : {self.index[item]}' + "}, \n"
+                else:
+                    s = "{" + f'"{item}" : {self.index[item]}' + "}"
+                file.write(s)
+            # json.dump(self.index, file, sort_keys = True, separators=["\n", ":"])
+            file.write("]")
+        self.index_size = getsize(f"indexfile{self.index_file_num}.json")
+        self.index_file_num += 1
+
+    def print_stats(self):
+        """
+        Output the stats of the index to console\n
+        # unique tokens, # unique docs, size of index on disk
+        """
+        # Get size of index on disk
+        size = int(self.index_size)
+        kb = int(size / 1000)
+        # Format size to KB
+        kb = f"{kb}.{int(size % 1000)}KB"
+        print(f"Wrote index to disk. Had {len(self.index)} unique tokens.\n"
+              f"Had {self.doc_count} unique documents. Index took up {kb} on disk")
 
 if __name__ == '__main__':
 
