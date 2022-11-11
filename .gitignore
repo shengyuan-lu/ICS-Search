@@ -155,3 +155,5 @@ cython_debug/
 DEV/
 
 .DS_Store
+
+.json
