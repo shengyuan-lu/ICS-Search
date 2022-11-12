@@ -2,7 +2,9 @@ import json
 from os.path import getsize
 import os
 import shutil
-
+from Reader import Reader, NoMoreFilesToReadException
+from Parser import parse
+from Tokenizer import compute_word_frequencies
 
 class Memory:
 
@@ -78,23 +80,48 @@ class Memory:
         # Get size of index on disk
         size = int(self.index_size)
         kb = int(size / 1000)
+
         # Format size to KB
-        kb = f"{kb}.{int(size % 1000)}KB"
-        stat_str = f"Wrote index to disk.\nHad {len(self.index)} unique tokens.\n"
-        stat_str1 = f"Had {self.doc_count} unique documents.\nIndex took up {kb} on disk."
-        stat_str = stat_str + stat_str1
+        kb = f'{kb}.{int(size % 1000)}KB'
+
+        stat_str = f'Unique token count: {len(self.index)}\n'
+        stat_str += f'Unique document count: {self.doc_count}\n'
+        stat_str += f'Index size on disk: {kb}'
 
         print(stat_str)
 
-        with open("stats.txt", 'w') as stats:
+        with open('stats.txt', 'w+') as stats:
             stats.write(stat_str)
 
 
-# Only for testing purposes
 if __name__ == '__main__':
-    dit = {"capple": [5, [2, 3]], "bapple": [4, [5, 3]]}
+    reader = Reader('DEV_SMALL')
+    memory = Memory()
 
-    mem = Memory()
-    mem.store_to_disk()
-    mem.add_page(dit, 1)
-    mem.store_to_disk()
+    path = 'Index'
+
+    # Remove the folder and its content if already exist
+    if os.path.exists(path):
+        shutil.rmtree(path)
+
+    # Create the folder
+    os.mkdir(path)
+
+    try:
+        while True:
+            file = reader.get_next_file()
+
+            doc_id, url, raw_text = parse(file)
+
+            frequencies = compute_word_frequencies(raw_text)
+
+            memory.add_page(frequencies, doc_id)
+
+    except NoMoreFilesToReadException as e:
+        print(e)
+
+    # Write index to disk
+    memory.store_to_disk()
+
+    # Print the stats
+    memory.print_stats()
