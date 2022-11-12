@@ -20,7 +20,7 @@ if __name__ == '__main__':
     reader = Reader('DEV')
     memory = Memory()
 
-    path = 'index'
+    path = 'Index'
     
     # Remove the folder and its content if already exist
     if os.path.exists(path):

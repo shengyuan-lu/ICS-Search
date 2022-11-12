@@ -91,7 +91,13 @@ class Reader:
 
         else:
             # If there's no more files to be processed, raise exception
-            raise NoMoreFilesToReadException(f'Reader has processed all {self.get_num_of_file_processed()} files under folder {self.base_folder}.')
+            raise NoMoreFilesToReadException(f'Reader has processed a total of {self.get_num_of_file_processed()} files under folder {self.base_folder}.')
+
+
+    def write_doc_id_dict(self):
+        with open('doc_id_dict.txt', 'w+') as file:
+            for doc_id, path in self.doc_id_dict.items():
+                file.write(f'{doc_id}:{path}\n')
 
 
 # Custom Exception
@@ -102,7 +108,7 @@ class NoMoreFilesToReadException(Exception):
 # ** This part is just for testing the Reader class **
 # Use the main function in Indexer.py to build the indexer with this class
 if __name__ == '__main__':
-    reader = Reader('DEV')
+    reader = Reader('DEV_SMALL')
 
     # reader.print_not_processed_sub_folders()
     # reader.print_not_processed_files_in_current_sub_folder()
@@ -113,6 +119,8 @@ if __name__ == '__main__':
 
     except NoMoreFilesToReadException as e:
         print(e)
+
+    reader.write_doc_id_dict()
 
     # reader.print_process_doc_id_and_file()
     # print('Total number of files processed: ' + str(reader.get_num_of_file_processed()))

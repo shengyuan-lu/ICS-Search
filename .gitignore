@@ -156,7 +156,9 @@ DEV/
 DEV_SMALL/
 
 index/
+Index/
 
 .DS_Store
 
 *.json
+*.txt
