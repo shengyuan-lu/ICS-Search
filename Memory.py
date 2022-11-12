@@ -42,7 +42,7 @@ class Memory:
         if len(self.index) <= 0:
             return
 
-        with open(f"indexfile{self.index_file_num}.json", 'w') as file:
+        with open(f"index\indexfile{self.index_file_num}.json", 'w') as file:
 
             file.write('[')
 
@@ -59,7 +59,7 @@ class Memory:
 
             file.write("]")
 
-        self.index_size = getsize(f"indexfile{self.index_file_num}.json")
+        self.index_size = getsize(f"index\indexfile{self.index_file_num}.json")
         self.index_file_num += 1
 
     def print_stats(self):
@@ -72,8 +72,14 @@ class Memory:
         kb = int(size / 1000)
         # Format size to KB
         kb = f"{kb}.{int(size % 1000)}KB"
-        print(f"Wrote index to disk. Had {len(self.index)} unique tokens.\n"
-              f"Had {self.doc_count} unique documents. Index took up {kb} on disk")
+        stat_str = f"Wrote index to disk.\nHad {len(self.index)} unique tokens.\n"
+        stat_str1 = f"Had {self.doc_count} unique documents.\nIndex took up {kb} on disk."
+        stat_str = stat_str + stat_str1
+
+        print(stat_str)
+
+        with open("stats.txt", 'w') as stats:
+            stats.write(stat_str)
 
 
 # Only for testing purposes
