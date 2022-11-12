@@ -40,9 +40,11 @@ class Memory:
             # TODO for M1, we only care about freq for any given file
             if key not in self.index:
                 self.index[key] = [[doc_id, val["freq"]]]
-                self.uniq_tokens.add(key)
             else:
                 self.index[key].append([doc_id, val["freq"]])
+
+            if key not in self.uniq_tokens:
+                self.uniq_tokens.add(key)
 
         # check if doc_count is at max_doc_ct and store to disk if so
         if self.doc_count == self.max_doc_ct:
@@ -109,35 +111,4 @@ class Memory:
 
 
 if __name__ == '__main__':
-    reader = Reader('DEV_SMALL')
-    memory = Memory()
-
-    path = 'Index'
-
-    # Remove the folder and its content if already exist
-    if os.path.exists(path):
-        shutil.rmtree(path)
-
-    # Create the folder
-    os.mkdir(path)
-
-    try:
-        while True:
-            file = reader.get_next_file()
-
-            doc_id, url, raw_text = parse(file)
-
-            frequencies = compute_word_frequencies(raw_text)
-
-            memory.add_page(frequencies, doc_id)
-
-    except NoMoreFilesToReadException as e:
-        print(e)
-
-    # Write index to disk
-    memory.store_to_disk()
-
-    # Print the stats
-    memory.print_stats()
-
-    reader.write_doc_id_dict()
+    pass
