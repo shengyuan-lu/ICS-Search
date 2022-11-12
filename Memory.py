@@ -53,20 +53,20 @@ class Memory:
 
         with open(complete_name, 'w') as file:
 
-            file.write('[')
+            # file.write('[')
 
-            for index, item in enumerate(sorted(self.index.keys())):
+            # for index, item in enumerate(sorted(self.index.keys())):
 
-                s = "{" + f'"{item}" : {self.index[item]}' + "}"
+                # s = "{" + f'"{item}" : {self.index[item]}' + "}"
 
-                if index != len(self.index.keys()) - 1:
-                    s += ", \n"
+                # if index != len(self.index.keys()) - 1:
+                    # s += ", \n"
 
-                file.write(s)
+                # file.write(s)
 
-            # json.dump(self.index, file, sort_keys = True, separators=["\n", ":"])
+            file.write(json.dumps(self.index, sort_keys=True, indent=4))
 
-            file.write("]")
+            # file.write("]")
 
         self.index_size = getsize(complete_name)
 
@@ -125,3 +125,5 @@ if __name__ == '__main__':
 
     # Print the stats
     memory.print_stats()
+
+    reader.write_doc_id_dict()
