@@ -13,10 +13,21 @@ from Reader import Reader, NoMoreFilesToReadException
 from Memory import Memory
 from Parser import parse
 from Tokenizer import compute_word_frequencies
+import os
+import shutil
 
 if __name__ == '__main__':
     reader = Reader('DEV')
     memory = Memory()
+
+    path = 'index'
+    
+    # Remove the folder and its content if already exist
+    if os.path.exists(path):
+        shutil.rmtree(path)
+        
+    # Create the folder
+    os.mkdir(path)
 
     try:
         while True:
