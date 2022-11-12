@@ -48,3 +48,5 @@ if __name__ == '__main__':
 
     # Print the stats
     memory.print_stats()
+
+    reader.write_doc_id_dict()
