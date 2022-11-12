@@ -11,24 +11,36 @@ class Memory:
     # initialize the master dict
     # initialize the document count
     def __init__(self):
+
+        # This is index in Memory
         self.index = dict()
+        # This is amount of docs in the index in Memory
         self.doc_count = 0
+        # This is amount of index files on disk
         self.index_file_num = 0
-        self.max_doc_ct = 50
-        self.index_size = -1
+        # This is max amount of docs that can be stored in the index in Memory before getting written to disk and wiped from memory
+        self.max_doc_ct = 500
+        # This is the total number of docs that are added to indexes
+        self.total_doc_count = 0
+        # This is the total size of the generated indexes
+        self.index_size = 0
+        # This is the set of unique tokens that are in the index
+        self.uniq_tokens = set()
 
     # this method will add the tokens from one page into the master dict
     # This will take in ({tokens:[occurrences, [position]]}, doc_id) and then update the internal index
     def add_page(self, token: 'dict[str:[int, [int]]]', doc_id: 'int'):
 
-        # increment doc count
+        # increment doc count and total_doc_count
         self.doc_count += 1
+        self.total_doc_count += 1
 
         # insert / update master dict with token
         for key, val in token.items():
             # TODO for M1, we only care about freq for any given file
             if key not in self.index:
                 self.index[key] = [[doc_id, val["freq"]]]
+                self.uniq_tokens.add(key)
             else:
                 self.index[key].append([doc_id, val["freq"]])
 
@@ -68,7 +80,7 @@ class Memory:
 
             # file.write("]")
 
-        self.index_size = getsize(complete_name)
+        self.index_size += getsize(complete_name)
 
         self.index_file_num += 1
 
@@ -84,8 +96,8 @@ class Memory:
         # Format size to KB
         kb = f'{kb}.{int(size % 1000)}KB'
 
-        stat_str = f'Unique token count: {len(self.index)}\n'
-        stat_str += f'Unique document count: {self.doc_count}\n'
+        stat_str = f'Unique token count: {len(self.uniq_tokens)}\n'
+        stat_str += f'Unique document count: {self.total_doc_count}\n'
         stat_str += f'Index size on disk: {kb}'
 
         print(stat_str)
