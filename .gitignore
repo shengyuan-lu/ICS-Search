@@ -158,3 +158,5 @@ DEV_SMALL/
 index/
 
 .DS_Store
+
+*.json

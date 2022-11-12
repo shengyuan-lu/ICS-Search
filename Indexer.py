@@ -19,11 +19,14 @@ import shutil
 if __name__ == '__main__':
     reader = Reader('DEV')
     memory = Memory()
+
     path = 'index'
-    #remove the folder and its content if already exist
+    
+    # Remove the folder and its content if already exist
     if os.path.exists(path):
         shutil.rmtree(path)
-    #create the folder
+        
+    # Create the folder
     os.mkdir(path)
 
     try:

@@ -40,13 +40,13 @@ class Memory:
         """
         Writes the current in-memory index to disk
         """
-        # this check if the index have anything in it, and then only save to disk if there is something in it
+        # This check if the index have anything in it, and then only save to disk if there is something in it
         if len(self.index) <= 0:
             return
+
         path = "index"
-        #create the directory if not exist
-
-
+        
+        # Create the directory if not exist
         complete_name = os.path.join(path,f"indexfile{self.index_file_num}.json")
 
         with open(complete_name, 'w') as file:
@@ -67,6 +67,7 @@ class Memory:
             file.write("]")
 
         self.index_size = getsize(complete_name)
+
         self.index_file_num += 1
 
     def print_stats(self):
