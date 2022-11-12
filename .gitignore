@@ -153,6 +153,9 @@ cython_debug/
 .idea/
 
 DEV/
+DEV_SMALL/
+
+index/
 
 .DS_Store
 
