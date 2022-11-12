@@ -76,7 +76,9 @@ class Memory:
 
             # file.write("]")
 
-            file.write(json.dumps(self.index, sort_keys=True, indent=0))
+            file.write(json.dumps(self.index, sort_keys=True))
+
+            # file.write(json.dumps(self.index, sort_keys=True, indent=4))
 
         self.index_size += getsize(complete_name)
 
@@ -94,7 +96,7 @@ class Memory:
         kb = int(size / 1000)
 
         # Format size to KB
-        kb = f'{kb}.{int(size % 1000)}KB'
+        kb = f'{kb}.{int(size % 1000)} KB'
 
         stat_str = f'Unique token count: {len(self.uniq_tokens)}\n'
         stat_str += f'Unique document count: {self.total_doc_count}\n'
