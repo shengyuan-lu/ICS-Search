@@ -11,8 +11,8 @@ def tokenize(content: 'str') -> 'list':
 # returns (token : {position (str) : int, occurrence (str) : int})
 def compute_word_frequencies(textContent:str) -> 'dict':
     ps = PorterStemmer()
-    token_map = dict();
-    token_list = tokenize(textContent);
+    token_map = dict()
+    token_list = tokenize(textContent)
     stop_word_set = {'should', 'between', 'both', 'or', 'you’ve', 'all', 'let’s', "wouldn't", 'he’s', 'she’d',
                          'his', 'my', 'had', 'they’ll', 'but', 'for', "she'd", "we're", 'how’s', 'they’ve', 'about',
                          'wasn’t', 'such', "they'd", 'be', 'most', 'mustn’t', 'own', 'we’ve', 'why’s', 'again', "it's",
@@ -46,7 +46,7 @@ def compute_word_frequencies(textContent:str) -> 'dict':
         else:
             init_dict = dict()
             init_dict["freq"] = 1
-            init_dict["pos"] =set();
+            init_dict["pos"] = set()
             init_dict["pos"].add(idx)
             token_map[token] = init_dict
 
