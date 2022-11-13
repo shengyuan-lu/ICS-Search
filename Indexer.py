@@ -17,7 +17,7 @@ import os
 import shutil
 
 if __name__ == '__main__':
-    reader = Reader('DEV')
+    reader = Reader('DEV_Small')
     memory = Memory()
 
     path = 'index'

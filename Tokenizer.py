@@ -1,5 +1,5 @@
 import re
-
+from nltk.stem import PorterStemmer
 def tokenize(content: 'str') -> 'list':
 
     pattern = "[a-zA-Z0-9]+'?’?[a-zA-Z0-9]*"
@@ -10,7 +10,7 @@ def tokenize(content: 'str') -> 'list':
 # textContent = processed text from HTML
 # returns (token : {position (str) : int, occurrence (str) : int})
 def compute_word_frequencies(textContent:str) -> 'dict':
-
+    ps = PorterStemmer()
     token_map = dict();
     token_list = tokenize(textContent);
     stop_word_set = {'should', 'between', 'both', 'or', 'you’ve', 'all', 'let’s', "wouldn't", 'he’s', 'she’d',
@@ -37,6 +37,7 @@ def compute_word_frequencies(textContent:str) -> 'dict':
                          'yours', "wasn't", 'other', 'and', 'who’s', 'too', "we'll"}
 
     for idx, token in enumerate(token_list):
+        token = ps.stem(token)
         if token in stop_word_set or len(token) < 2:
             continue
         if token in token_map.keys():
