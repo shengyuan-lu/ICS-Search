@@ -16,6 +16,7 @@ from Tokenizer import compute_word_frequencies
 import os
 import shutil
 
+
 def run(base_folder):
     reader = Reader(base_folder)
     memory = Memory()
