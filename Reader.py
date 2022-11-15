@@ -94,6 +94,7 @@ class Reader:
             raise NoMoreFilesToReadException(f'Reader has processed a total of {self.get_num_of_file_processed()} files under folder {self.base_folder}.')
 
 
+    # TODO Make it JSON
     def write_doc_id_dict(self):
         with open('doc_id_dict.txt', 'w+') as file:
             for doc_id, path in self.doc_id_dict.items():
