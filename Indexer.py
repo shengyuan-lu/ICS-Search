@@ -16,22 +16,22 @@ from Tokenizer import compute_word_frequencies
 import os
 import shutil
 
-if __name__ == '__main__':
-    reader = Reader('DEV')
+
+def run(base_folder):
+    reader = Reader(base_folder)
     memory = Memory()
 
     path = 'Index'
-    
+
     # Remove the folder and its content if already exist
     if os.path.exists(path):
         shutil.rmtree(path)
-        
+
     # Create the folder
     os.mkdir(path)
 
     try:
         while True:
-
             file = reader.get_next_file()
 
             doc_id, url, raw_text = parse(file)
@@ -50,3 +50,6 @@ if __name__ == '__main__':
     memory.print_stats()
 
     reader.write_doc_id_dict()
+
+if __name__ == '__main__':
+    run('DEV')
