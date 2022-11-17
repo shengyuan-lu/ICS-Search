@@ -102,7 +102,7 @@ class Memory:
 
         print(stat_str)
 
-        with open('stats.txt', 'w+') as stats:
+        with open('memory_stats.txt', 'w+') as stats:
             stats.write(stat_str)
 
 
