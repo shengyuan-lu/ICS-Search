@@ -49,6 +49,7 @@ def run(base_folder):
     # Print the stats
     memory.print_stats()
 
+    # Write a doc_id : url dic on disk
     reader.write_doc_id_dict()
 
 if __name__ == '__main__':
