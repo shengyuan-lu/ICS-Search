@@ -25,6 +25,8 @@ class Search:
         self.indexfile = open("test_files/merged.txt","r")
         tokens = self.tokenize();
         print(tokens)
+        # parse the index_of_index.json into a python dict
+        # and save the result in tokenIndexJson
         self.readIndexOfIndex()
         self.results = dict()
         for token in tokens:
@@ -36,11 +38,13 @@ class Search:
                 jsonline = json.loads(jsonline)
                 postings = jsonline[token]
                 newdict = dict()
+
+                # if the result dictionary is empty
                 if not bool(self.results):
                     for docId in postings:
                         newdict[docId] = {token:postings[docId]}
                     self.results = newdict
-
+                # if not empty
                 else:
                     for docId in postings:
                         if docId in self.results:
@@ -54,4 +58,4 @@ class Search:
 
 
 if __name__ == '__main__':
-    search = Search("apple aaa bbb")
+    search = Search("apple bbb")
