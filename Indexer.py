@@ -30,6 +30,12 @@ def run(base_folder):
     # Create the folder
     os.mkdir(path)
 
+    if os.path.exists('reader_stats.txt'):
+        shutil.rmtree('reader_stats.txt')
+
+    if os.path.exists('memory_stats.txt'):
+        shutil.rmtree('memory_stats.txt')
+
     try:
         while True:
             file = reader.get_next_file()
@@ -42,6 +48,9 @@ def run(base_folder):
 
     except NoMoreFilesToReadException as e:
         print(e)
+
+        with open('reader_stats.txt', 'w+') as stats:
+            stats.write(e)
 
     # Write index to disk
     memory.store_to_disk()
