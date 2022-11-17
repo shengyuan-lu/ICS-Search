@@ -39,9 +39,9 @@ class Memory:
         for key, val in token.items():
             # TODO for M1, we only care about freq for any given file
             if key not in self.index:
-                self.index[key] = [[doc_id, val["freq"]]]
+                self.index[key] = {doc_id: val["freq"]}
             else:
-                self.index[key].append([doc_id, val["freq"]])
+                self.index[key][doc_id] = val["freq"]
 
             if key not in self.uniq_tokens:
                 self.uniq_tokens.add(key)
@@ -61,24 +61,20 @@ class Memory:
             return
         
         # Create the directory if not exist
-        complete_name = os.path.join("Index", f"indexfile{self.index_file_num}.json")
+        complete_name = os.path.join("Index", f"indexfile{self.index_file_num}.txt")
 
         with open(complete_name, 'w') as file:
 
-            # file.write('[')
 
-            # for index, item in enumerate(sorted(self.index.keys())):
+            for index, item in enumerate(sorted(self.index.keys())):
 
-                # s = "{" + f'"{item}" : {self.index[item]}' + "}"
+                s = {item:self.index[item]}
 
-                # if index != len(self.index.keys()) - 1:
-                    # s += ", \n"
+                file.write(json.dumps(s))
 
-                # file.write(s)
+                file.write("\n")
 
-            # file.write("]")
-
-            file.write(json.dumps(self.index, sort_keys=True))
+            # file.write(json.dumps(self.index, sort_keys=True))
 
             # file.write(json.dumps(self.index, sort_keys=True, indent=4))
 
