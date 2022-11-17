@@ -50,7 +50,7 @@ def run(base_folder):
         print(e)
 
         with open('reader_stats.txt', 'w+') as stats:
-            stats.write(e)
+            stats.write(str(e))
 
     # Write index to disk
     memory.store_to_disk()
