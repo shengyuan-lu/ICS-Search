@@ -27,10 +27,12 @@ def merger(path1 : str, path2 : str, out_path : str = "final_index.json",
         path2 = "temp.json"
 
     out = open(out_path, "w")
+    '''
     print(f"Opening and merging {path1} with {path2}. Out path was {out_path}.\nPath 1 read: ")
     print_txt(path1)
     print("\nAnd Path 2 read:")
     print_txt(path2)
+    '''
     with open(path1, "r") as a, open(path2, "r") as b:
         a_line = a.readline().strip()
         b_line = b.readline().strip()
@@ -48,7 +50,7 @@ def merger(path1 : str, path2 : str, out_path : str = "final_index.json",
             if b_line != "":
                 b_json = json.loads(b_line)
                 bword = list(b_json.keys())[0]
-            print(f"Comparing {aword} to {bword}")
+            #print(f"Comparing {aword} to {bword}")
             # if the words are the same, combine lists
             if aword == bword:
                 a_json[aword] = a_json[aword] | b_json[bword]
@@ -60,17 +62,17 @@ def merger(path1 : str, path2 : str, out_path : str = "final_index.json",
             elif aword == "" and bword != "":
                 line = json.dumps(b_json)
                 b_line = b.readline().strip()
-                print("A was blank, B wasn't")
+                #print("A was blank, B wasn't")
             elif bword == "" and aword != "":
                 line = json.dumps(a_json)
                 a_line = a.readline().strip()
-                print("B was blank, A wasn't", line)
+                #print("B was blank, A wasn't", line)
             # if aword comes first alphabetically
             elif aword < bword:
 
                 line = json.dumps(a_json)
                 a_line = a.readline().strip()
-                print(f"A came first, since {aword} comes before {bword}")
+                #print(f"A came first, since {aword} comes before {bword}")
             #if bword comes first alphabetically
             elif bword < aword:
                 line = json.dumps(b_json)
@@ -82,8 +84,8 @@ def merger(path1 : str, path2 : str, out_path : str = "final_index.json",
             out.write(line + "\n")
             #break
     out.close()
-    print("Output read:")
-    print_txt(out_path)
+    #print("Output read:")
+    #print_txt(out_path)
     #Check 'delete' bool before deleting
     if delete == False:
         return
@@ -98,7 +100,7 @@ def merge_folder(folder):
     :param folder: the folder to merge all of the contents of
     :return:
     """
-    files = [i for i in listdir(folder) if ".json" in i]
+    files = [i for i in listdir(folder) if ".txt" in i]
     #don't merge if there is 0 or 1 files
     if len(files) < 2:
         return
@@ -109,7 +111,7 @@ def merge_folder(folder):
         merger(f, "final_index.json", delete=True)
         #break
 
-    print(files)
+    #print(files)
 
 def print_txt(path):
     with open(path, "r") as f:
