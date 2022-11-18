@@ -13,6 +13,7 @@ import json
 from Reader import Reader, NoMoreFilesToReadException
 from Memory import Memory
 from Parser import parse
+from Merger import merge_folder
 from Tokenizer import compute_word_frequencies
 import os
 import shutil
@@ -78,14 +79,14 @@ class Indexer:
         reader = Reader(self.base_folder)
         memory = Memory()
 
+        # Path of the raw Index being generated
         path = 'Index'
 
         # Remove the folder and its content if already exist
         if os.path.exists(path):
             shutil.rmtree(path)
-        else:
-            # Create the folder
-            os.mkdir(path)
+
+        os.mkdir(path)
 
         if os.path.exists('reader_stats.txt'):
             os.remove('reader_stats.txt')
@@ -119,10 +120,15 @@ class Indexer:
         # Print the stats
         memory.print_stats()
 
+        # Merge everything under /Index
+        merge_folder(path)
+
+        self.generate_index_of_index('final_index.json')
+
 
 # The actual main function to generate the index
 if __name__ == '__main__':
-    indexer = Indexer('DEV')
+    indexer = Indexer('DEV_SMALL')
     indexer.run()
-    indexer.generate_index_of_index('Index/indexfile0.txt')
+    # indexer.generate_index_of_index('Index/indexfile0.txt')
     # indexer.generate_index_of_index('test_files/merged.txt')

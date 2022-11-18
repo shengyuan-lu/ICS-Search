@@ -67,7 +67,6 @@ class Memory:
 
         with open(complete_name, 'w') as file:
 
-
             for index, item in enumerate(sorted(self.index.keys())):
 
                 s = {item:self.index[item]}

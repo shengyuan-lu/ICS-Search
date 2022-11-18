@@ -108,7 +108,7 @@ def merge_folder(folder):
     for f in files:
         f = path.join(folder, f)
         #print(f"Merging {f} with final_index")
-        merger(f, "final_index.json", delete=True)
+        merger(f, "final_index.json", "final_index.json", delete=False)
         #break
 
     #print(files)
