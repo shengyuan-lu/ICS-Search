@@ -27,6 +27,7 @@ class Memory:
         # This is the set of unique tokens that are in the index
         self.uniq_tokens = set()
 
+
     # this method will add the tokens from one page into the master dict
     # This will take in ({tokens:[occurrences, [position]]}, doc_id) and then update the internal index
     def add_page(self, token: 'dict[str:[int, [int]]]', doc_id: 'int'):
@@ -50,6 +51,7 @@ class Memory:
         if self.doc_count == self.max_doc_ct:
             self.doc_count = 0
             self.store_to_disk()
+
 
     # this method will store the index to a file on disk (not fully implemented yet to search through)
     def store_to_disk(self):
@@ -83,6 +85,7 @@ class Memory:
         self.index_file_num += 1
 
         self.index.clear()
+
 
     def print_stats(self):
         """
