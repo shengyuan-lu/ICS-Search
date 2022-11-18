@@ -51,13 +51,16 @@ class Reader:
                                                       file_name.endswith('.json') and os.path.isfile(
                                                           os.path.join(sub_folder_path, file_name))]
 
+
     def print_not_processed_sub_folders(self) -> None:
         for f in self.sub_folder_file_path_list:
             print(f)
 
+
     def print_not_processed_files_in_current_sub_folder(self) -> None:
         for f in self.current_sub_folder_file_path_list:
             print(f)
+
 
     def print_process_doc_id_and_file(self) -> None:
         print('doc_id : url')
@@ -65,11 +68,19 @@ class Reader:
         for doc_id, url in self.doc_id_dict.items():
             print(f'{doc_id} : {url}')
 
+
     def get_num_of_file_processed(self) -> int:
         return self.next_doc_id_to_be_assigned - 1
 
+
     def get_total_file_in_folder(self) -> int:
         return self.total_url_count
+
+
+    def write_doc_id_dict(self):
+        with open('doc_id_dict.json', 'w+') as file:
+            file.write(json.dumps(self.doc_id_dict, sort_keys=True, indent=4))
+
 
     def get_next_file(self) -> (int, dict):  # returns (doc_id, processed_json_as_dict)
 
@@ -106,13 +117,11 @@ class Reader:
                     return self.next_doc_id_to_be_assigned - 1, processed_file
 
             else:
+                # Write a doc_id : url dic on disk
+                self.write_doc_id_dict()
+
                 # If there's no more files to be processed, raise exception
                 raise NoMoreFilesToReadException(f'Reader has processed {self.get_num_of_file_processed()} unique files under folder {self.base_folder} out of {self.get_total_file_in_folder()} total files present.')
-
-
-    def write_doc_id_dict(self):
-        with open('doc_id_dict.json', 'w+') as file:
-            file.write(json.dumps(self.doc_id_dict, sort_keys=True, indent=4))
 
 
 # Custom Exception
