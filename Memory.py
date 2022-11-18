@@ -38,7 +38,7 @@ class Memory:
 
         # insert / update master dict with token
         for key, val in token.items():
-            # TODO for M1, we only care about freq for any given file
+            # TODO for M1/M2, we only care about freq for any given file
             if key not in self.index:
                 self.index[key] = {doc_id: val["freq"]}
             else:
@@ -98,10 +98,11 @@ class Memory:
         # Format size to KB
         kb = f'{kb}.{int(size % 1000)} KB'
 
-        stat_str = f'Unique token count: {len(self.uniq_tokens)}\n'
-        stat_str += f'Unique document count: {self.total_doc_count}\n'
-        stat_str += f'Index size on disk: {kb}'
+        stat_str = f'Memory: Unique token count: {len(self.uniq_tokens)}\n'
+        stat_str += f'Memory: Unique document count: {self.total_doc_count}\n'
+        stat_str += f'Memory: Total separated index size on disk: {kb}'
 
+        print()
         print(stat_str)
 
         with open('memory_stats.txt', 'w+') as stats:
