@@ -154,6 +154,7 @@ cython_debug/
 
 DEV/
 DEV_SMALL/
+developer/
 
 index/
 Index/
