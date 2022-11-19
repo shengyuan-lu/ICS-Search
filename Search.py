@@ -30,7 +30,7 @@ class Search:
     def printResults(self,limit = 5):
         count = 0
 
-        for r in self.sortedResults[0:limit+1]:
+        for r in self.sortedResults[0:limit]:
             print(r[1]["url"])
 
 
@@ -90,4 +90,4 @@ class Search:
 
 
 if __name__ == '__main__':
-    search = Search("ics lab")
+    search = Search("informatics")
