@@ -103,13 +103,10 @@ def search():
 
     return render_template("index.html",results = resultsList)
 
-<<<<<<< Updated upstream
-=======
 @app.route("/")
 def launch():
     return render_template("main.html")
 
 
->>>>>>> Stashed changes
 if __name__ == '__main__':
     app.run(debug=True)
