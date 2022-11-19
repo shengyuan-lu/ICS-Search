@@ -8,10 +8,13 @@
 # Ranking: at the very least, your ranking formula should include tf-idf scoring, and take the important words into consideration, but you should feel free to add additional components to this formula if you think they improve the retrieval.
 
 # IMPORT OTHER CLASSES HERE
+from flask import Flask,jsonify,request,render_template
 import re
 import json
 import os
 from nltk.stem import PorterStemmer
+
+app = Flask(__name__)
 class Search:
 
     def readIndexOfIndex(self):
@@ -29,9 +32,10 @@ class Search:
 
     def printResults(self,limit = 5):
         count = 0
+        result = map(lambda t:t[1]["url"],self.sortedResults[0:limit])
 
-        for r in self.sortedResults[0:limit]:
-            print(r[1]["url"])
+        return list(result)
+
 
 
 
@@ -83,11 +87,19 @@ class Search:
                             newdict[docId]["score"] += postings[docId]
                     self.results = newdict
         self.sortResults()
-        self.printResults()
 
 
 
 
+
+@app.route("/search")
+def hello():
+    query = request.args.get("query")
+    print(query)
+    search = Search(query)
+    resultsList = search.printResults()
+
+    return render_template("index.html",results = resultsList)
 
 if __name__ == '__main__':
-    search = Search("informatics")
+    app.run(debug=True)
