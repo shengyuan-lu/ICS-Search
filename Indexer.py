@@ -15,6 +15,7 @@ from Memory import Memory
 from Parser import parse
 from Merger import merge_folder
 from Tokenizer import compute_word_frequencies
+from os import path
 import os
 import shutil
 import json
@@ -25,7 +26,7 @@ class Indexer:
     def __init__(self, source_folder, base_folder, merged_index_name):
         self.source_folder = source_folder
         self.base_folder = base_folder
-        self.merged_index_path = f'{base_folder}/{merged_index_name}'
+        self.merged_index_path =  path.join(base_folder, merged_index_name)
 
 
     def generate_index_of_index(self):

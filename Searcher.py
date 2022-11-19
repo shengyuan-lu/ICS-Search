@@ -16,34 +16,7 @@ from nltk.stem import PorterStemmer
 
 app = Flask(__name__)
 
-class Search:
-
-    def read_index_of_index(self):
-        index_of_index = open("index_of_index.json")
-        self.index_of_index_json = json.load(index_of_index)
-        index_of_index.close()
-
-
-    def tokenize(self):
-        pattern = "\s+"
-        return re.split(pattern,self.query)
-
-
-    def read_doc_id_dict(self):
-        f = open("doc_id_dict.json")
-        self.id_to_url = json.load(f)
-        f.close()
-
-
-    def print_results(self, limit = 5):
-        result = map(lambda t:t[1]["url"], self.sorted_results[0:limit])
-
-        return list(result)
-
-
-    def sort_results(self):
-        self.sorted_results = sorted(self.results.items(), key=lambda t: -t[1]["score"])
-
+class Searcher:
 
     def __init__(self, query):
         self.index_of_index_json = None
@@ -52,11 +25,12 @@ class Search:
 
         self.query = query
 
-        complete_name = os.path.join("Index", "final_index.txt")
-        self.indexfile = open(complete_name,"r")
-        tokens = self.tokenize();
+        final_index_path = os.path.join('Index', 'final_index.txt')
+        self.final_index_file = open(final_index_path, 'r')
 
-        print(tokens)
+        tokens = self.tokenize()
+        print('Tokenized Query: ' + str(tokens))
+
         ps = PorterStemmer()
 
         # parse the index_of_index.json into a python dict
@@ -70,8 +44,8 @@ class Search:
 
             if stemmed_token in self.index_of_index_json:
                 pos = self.index_of_index_json[stemmed_token]
-                self.indexfile.seek(pos)
-                json_line = self.indexfile.readline()
+                self.final_index_file.seek(pos)
+                json_line = self.final_index_file.readline()
 
                 json_line = json.loads(json_line)
                 postings = json_line[stemmed_token]
@@ -82,8 +56,8 @@ class Search:
                     for docId in postings:
 
                         new_dict[docId] = {token:postings[docId]}
-                        new_dict[docId]["url"] = self.id_to_url[docId]
-                        new_dict[docId]["score"] = postings[docId]
+                        new_dict[docId]['url'] = self.id_to_url[docId]
+                        new_dict[docId]['score'] = postings[docId]
                     self.results = new_dict
                 # if not empty
                 else:
@@ -92,33 +66,60 @@ class Search:
                         if docId in self.results:
 
                             new_dict[docId] = self.results[docId]
-                            new_dict[docId]["url"] = self.id_to_url[docId]
+                            new_dict[docId]['url'] = self.id_to_url[docId]
                             new_dict[docId][token] = postings[docId]
-                            new_dict[docId]["score"] += postings[docId]
+                            new_dict[docId]['score'] += postings[docId]
 
                     self.results = new_dict
 
         self.sort_results()
 
+    def read_index_of_index(self):
+        index_of_index = open('index_of_index.json')
+        self.index_of_index_json = json.load(index_of_index)
+        index_of_index.close()
 
-@app.route("/search")
+
+    def tokenize(self):
+        pattern = '\s+'
+        return re.split(pattern,self.query)
+
+
+    def read_doc_id_dict(self):
+        f = open('doc_id_dict.json')
+        self.id_to_url = json.load(f)
+        f.close()
+
+
+    def get_results(self, limit = 5):
+        result = map(lambda t:t[1]['url'], self.sorted_results[0:limit])
+
+        return list(result)
+
+
+    def sort_results(self):
+        self.sorted_results = sorted(self.results.items(), key=lambda t: -t[1]['score'])
+
+
+@app.route('/search')
 def search():
-    query = request.args.get("query")
+    query = request.args.get('query')
+    query = query.strip()
 
-    if query is None:
-        query = ""
+    if not query:
+        query = ''
 
-    print(query)
+    print('Original Query: ' + query)
 
-    search = Search(query)
-    results = search.print_results()
+    search_query = Searcher(query)
+    results = search_query.get_results()
 
-    return render_template("index.html",results = results)
+    return render_template('index.html', results = results)
 
 
-@app.route("/")
+@app.route('/')
 def launch():
-    return render_template("main.html")
+    return render_template('main.html')
 
 
 if __name__ == '__main__':

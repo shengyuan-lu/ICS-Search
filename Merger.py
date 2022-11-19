@@ -114,9 +114,11 @@ def merge_folder(folder):
     """
     print()
     print(f'Merger: Started merging indexes under /{folder}')
+
+    final_index_path = path.join(folder, 'final_index.txt')
     
     # Only parse files that end in .txt. Also eliminates dirs
-    files_list = [i for i in listdir(folder) if '.txt' in i]
+    files_list = [i for i in listdir(folder) if i.endswith('.txt')]
 
     # Merge every file into the final_index on by one
     for file in files_list:
@@ -124,14 +126,14 @@ def merge_folder(folder):
         file = path.join(folder, file)
 
         # Equivalent of += by calling final_index for input 2 and output
-        merger(file, f'{folder}/final_index.txt', f'{folder}/final_index.txt', delete=True)
+        merger(file, final_index_path, final_index_path, delete=True)
 
     # Delete the temp.json if it still exists
     if os.path.exists('temp.json'):
         os.remove('temp.json')
 
     # Get size of index on disk
-    size = int(getsize(f'{folder}/final_index.txt'))
+    size = int(getsize(final_index_path))
     kb = int(size / 1000)
 
     # Format size to KB
