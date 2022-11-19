@@ -165,5 +165,6 @@ test_files/
 
 *.json
 *.txt
+*.pdf
 
 test_files/
