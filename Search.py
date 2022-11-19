@@ -104,13 +104,16 @@ class Search:
 @app.route("/search")
 def hello():
     query = request.args.get("query")
+
     if query is None:
         query = ""
-    print(query)
-    search = Search(query)
-    resultsList = search.print_results()
 
-    return render_template("index.html",results = resultsList)
+    print(query)
+
+    search = Search(query)
+    results = search.print_results()
+
+    return render_template("index.html",results = results)
 
 
 if __name__ == '__main__':
