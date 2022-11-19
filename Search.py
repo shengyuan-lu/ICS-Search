@@ -21,14 +21,18 @@ class Search:
         f = open("index_of_index.json")
         self.tokenIndexJson = json.load(f)
         f.close()
+
+
     def tokenize(self):
         pattern = "\s+"
         return re.split(pattern,self.query)
+
 
     def readDocIdDict(self):
         f = open("doc_id_dict.json")
         self.idToUrl = json.load(f)
         f.close()
+
 
     def printResults(self,limit = 5):
         count = 0
@@ -37,25 +41,30 @@ class Search:
         return list(result)
 
 
-
-
-
-
     def sortResults(self):
         self.sortedResults = sorted(self.results.items(), key=lambda t: -t[1]["score"])
 
+
     def __init__(self, query):
+        self.tokenIndexJson = None
+        self.sortedResults = None
+        self.idToUrl = None
+
         self.query = query
+
         complete_name = os.path.join("Index", "final_index.txt")
         self.indexfile = open(complete_name,"r")
         tokens = self.tokenize();
+
         print(tokens)
         ps = PorterStemmer()
+
         # parse the index_of_index.json into a python dict
         # and save the result in tokenIndexJson
         self.readIndexOfIndex()
         self.results = dict()
         self.readDocIdDict()
+
         for token in tokens:
             stemmed_token = ps.stem(token)
             if stemmed_token in self.tokenIndexJson:
@@ -86,22 +95,21 @@ class Search:
                             newdict[docId][token] = postings[docId]
                             newdict[docId]["score"] += postings[docId]
                     self.results = newdict
+
         self.sortResults()
-
-
-
 
 
 @app.route("/search")
 def hello():
     query = request.args.get("query")
-    if(query is None):
+    if query is None:
         query = ""
     print(query)
     search = Search(query)
     resultsList = search.printResults()
 
     return render_template("index.html",results = resultsList)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
