@@ -95,6 +95,8 @@ class Search:
 @app.route("/search")
 def hello():
     query = request.args.get("query")
+    if(query is None):
+        query = ""
     print(query)
     search = Search(query)
     resultsList = search.printResults()
