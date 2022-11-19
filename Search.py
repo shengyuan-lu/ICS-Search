@@ -102,7 +102,7 @@ class Search:
 
 
 @app.route("/search")
-def hello():
+def search():
     query = request.args.get("query")
 
     if query is None:
@@ -114,6 +114,11 @@ def hello():
     results = search.print_results()
 
     return render_template("index.html",results = results)
+
+
+@app.route("/")
+def launch():
+    return render_template("main.html")
 
 
 if __name__ == '__main__':
