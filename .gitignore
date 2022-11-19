@@ -159,6 +159,8 @@ developer/
 index/
 Index/
 
+test_files/
+
 .DS_Store
 
 *.json

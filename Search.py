@@ -8,6 +8,100 @@
 # Ranking: at the very least, your ranking formula should include tf-idf scoring, and take the important words into consideration, but you should feel free to add additional components to this formula if you think they improve the retrieval.
 
 # IMPORT OTHER CLASSES HERE
+from flask import Flask,jsonify,request,render_template
+import re
+import json
+import os
+from nltk.stem import PorterStemmer
+
+app = Flask(__name__)
+class Search:
+
+    def readIndexOfIndex(self):
+        f = open("index_of_index.json")
+        self.tokenIndexJson = json.load(f)
+        f.close()
+    def tokenize(self):
+        pattern = "\s+"
+        return re.split(pattern,self.query)
+
+    def readDocIdDict(self):
+        f = open("doc_id_dict.json")
+        self.idToUrl = json.load(f)
+        f.close()
+
+    def printResults(self,limit = 5):
+        count = 0
+        result = map(lambda t:t[1]["url"],self.sortedResults[0:limit])
+
+        return list(result)
+
+
+
+
+
+
+    def sortResults(self):
+        self.sortedResults = sorted(self.results.items(), key=lambda t: -t[1]["score"])
+
+    def __init__(self, query):
+        self.query = query
+        complete_name = os.path.join("Index", "final_index.txt")
+        self.indexfile = open(complete_name,"r")
+        tokens = self.tokenize();
+        print(tokens)
+        ps = PorterStemmer()
+        # parse the index_of_index.json into a python dict
+        # and save the result in tokenIndexJson
+        self.readIndexOfIndex()
+        self.results = dict()
+        self.readDocIdDict()
+        for token in tokens:
+            stemmed_token = ps.stem(token)
+            if stemmed_token in self.tokenIndexJson:
+                pos = self.tokenIndexJson[stemmed_token]
+                self.indexfile.seek(pos)
+                jsonline = self.indexfile.readline()
+
+                jsonline = json.loads(jsonline)
+                postings = jsonline[stemmed_token]
+                newdict = dict()
+
+                # if the result dictionary is empty
+                if not bool(self.results):
+                    for docId in postings:
+
+                        newdict[docId] = {token:postings[docId]}
+                        newdict[docId]["url"] = self.idToUrl[docId]
+                        newdict[docId]["score"] = postings[docId]
+                    self.results = newdict
+                # if not empty
+                else:
+                    for docId in postings:
+                        #docId = self.idToUrl[docId]
+                        if docId in self.results:
+
+                            newdict[docId] = self.results[docId]
+                            newdict[docId]["url"] = self.idToUrl[docId]
+                            newdict[docId][token] = postings[docId]
+                            newdict[docId]["score"] += postings[docId]
+                    self.results = newdict
+        self.sortResults()
+
+
+
+
+
+@app.route("/search")
+def hello():
+    query = request.args.get("query")
+    if(query is None):
+        query = ""
+    print(query)
+    search = Search(query)
+    resultsList = search.printResults()
+
+    return render_template("index.html",results = resultsList)
 
 if __name__ == '__main__':
-    pass
+    app.run(debug=True)
