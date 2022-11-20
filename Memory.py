@@ -27,6 +27,7 @@ class Memory:
         # This is the set of unique tokens that are in the index
         self.uniq_tokens = set()
 
+
     # this method will add the tokens from one page into the master dict
     # This will take in ({tokens:[occurrences, [position]]}, doc_id) and then update the internal index
     def add_page(self, token: 'dict[str:[int, [int]]]', doc_id: 'int'):
@@ -37,7 +38,7 @@ class Memory:
 
         # insert / update master dict with token
         for key, val in token.items():
-            # TODO for M1, we only care about freq for any given file
+            # TODO for M1/M2, we only care about freq for any given file
             if key not in self.index:
                 self.index[key] = {doc_id: val["freq"]}
             else:
@@ -50,6 +51,7 @@ class Memory:
         if self.doc_count == self.max_doc_ct:
             self.doc_count = 0
             self.store_to_disk()
+
 
     # this method will store the index to a file on disk (not fully implemented yet to search through)
     def store_to_disk(self):
@@ -64,7 +66,6 @@ class Memory:
         complete_name = os.path.join("Index", f"indexfile{self.index_file_num}.txt")
 
         with open(complete_name, 'w') as file:
-
 
             for index, item in enumerate(sorted(self.index.keys())):
 
@@ -84,6 +85,7 @@ class Memory:
 
         self.index.clear()
 
+
     def print_stats(self):
         """
         Output the stats of the index to console\n
@@ -96,13 +98,14 @@ class Memory:
         # Format size to KB
         kb = f'{kb}.{int(size % 1000)} KB'
 
-        stat_str = f'Unique token count: {len(self.uniq_tokens)}\n'
-        stat_str += f'Unique document count: {self.total_doc_count}\n'
-        stat_str += f'Index size on disk: {kb}'
+        stat_str = f'Memory: Unique token count: {len(self.uniq_tokens)}\n'
+        stat_str += f'Memory: Unique document count: {self.total_doc_count}\n'
+        stat_str += f'Memory: Total separated index size on disk: {kb}'
 
+        print()
         print(stat_str)
 
-        with open('stats.txt', 'w+') as stats:
+        with open('memory_stats.txt', 'w+') as stats:
             stats.write(stat_str)
 
 

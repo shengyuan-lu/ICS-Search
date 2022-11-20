@@ -35,7 +35,10 @@ class Reader:
         self.next_doc_id_to_be_assigned = 1
 
         # Track the path that the doc id is assigned to
-        self.doc_id_dict = dict()  # doc_id : path_to_file
+        self.doc_id_dict = dict()  # doc_id : url
+
+        # Track total file in the folder
+        self.total_url_count = 0
 
     def get_next_sub_folder(self) -> None:
         if len(self.current_sub_folder_file_path_list) == 0:
@@ -48,57 +51,77 @@ class Reader:
                                                       file_name.endswith('.json') and os.path.isfile(
                                                           os.path.join(sub_folder_path, file_name))]
 
+
     def print_not_processed_sub_folders(self) -> None:
         for f in self.sub_folder_file_path_list:
             print(f)
+
 
     def print_not_processed_files_in_current_sub_folder(self) -> None:
         for f in self.current_sub_folder_file_path_list:
             print(f)
 
-    def print_process_doc_id_and_file(self) -> None:
-        print('doc_id : file_path')
 
-        for doc_id, file_path in self.doc_id_dict.items():
-            print(f'{doc_id} : {file_path}')
+    def print_process_doc_id_and_file(self) -> None:
+        print('doc_id : url')
+
+        for doc_id, url in self.doc_id_dict.items():
+            print(f'{doc_id} : {url}')
+
 
     def get_num_of_file_processed(self) -> int:
         return self.next_doc_id_to_be_assigned - 1
 
-    def get_next_file(self) -> (int, dict):  # returns (doc_id, processed_json_as_dict)
-        if len(self.sub_folder_file_path_list) > 0 or len(self.current_sub_folder_file_path_list) > 0:
-            # There are stuff left to be processed!
 
-            # If the sub folder is empty, get the next sub folder
-            if len(self.current_sub_folder_file_path_list) == 0:
-                self.get_next_sub_folder()
-
-            # Get the file path of the next file to be processed
-            file_path = self.current_sub_folder_file_path_list.pop()
-
-            # Log the doc id dict
-            self.doc_id_dict[self.next_doc_id_to_be_assigned] = file_path
-
-            # Move doc id one digit forward
-            self.next_doc_id_to_be_assigned += 1
-
-            # Open the file, and process it with json.load().
-            # processed_file is the json dict to be returned
-            with open(file_path, "r") as file:
-                processed_file = json.load(file)
-
-            return self.next_doc_id_to_be_assigned - 1, processed_file
-
-        else:
-            # If there's no more files to be processed, raise exception
-            raise NoMoreFilesToReadException(f'Reader has processed a total of {self.get_num_of_file_processed()} files under folder {self.base_folder}.')
+    def get_total_file_in_folder(self) -> int:
+        return self.total_url_count
 
 
-    # TODO Make it JSON
     def write_doc_id_dict(self):
-        with open('doc_id_dict.txt', 'w+') as file:
-            for doc_id, path in self.doc_id_dict.items():
-                file.write(f'{doc_id}:{path}\n')
+        with open('doc_id_dict.json', 'w+') as file:
+            file.write(json.dumps(self.doc_id_dict, sort_keys=True, indent=4))
+
+
+    def get_next_file(self) -> (int, dict):  # returns (doc_id, processed_json_as_dict)
+
+        while True:
+            if len(self.sub_folder_file_path_list) > 0 or len(self.current_sub_folder_file_path_list) > 0:
+                # There are stuff left to be processed!
+                self.total_url_count += 1
+
+                # If the sub folder is empty, get the next sub folder
+                if len(self.current_sub_folder_file_path_list) == 0:
+                    self.get_next_sub_folder()
+
+                # Get the file path of the next file to be processed
+                file_path = self.current_sub_folder_file_path_list.pop()
+
+                # Open the file, and process it with json.load().
+                # processed_file is the json dict to be returned
+                with open(file_path, "r") as file:
+                    processed_file = json.load(file)
+
+                # Log the doc id dict
+                url = processed_file['url']
+
+                defrag_url = url.split('#')[0]
+
+                if defrag_url in self.doc_id_dict.values():
+                    continue
+                else:
+                    self.doc_id_dict[self.next_doc_id_to_be_assigned] = defrag_url
+
+                    # Move doc id one digit forward
+                    self.next_doc_id_to_be_assigned += 1
+
+                    return self.next_doc_id_to_be_assigned - 1, processed_file
+
+            else:
+                # Write a doc_id : url dic on disk
+                self.write_doc_id_dict()
+
+                # If there's no more files to be processed, raise exception
+                raise NoMoreFilesToReadException(f'Reader: finished processing {self.get_num_of_file_processed()} unique files under folder {self.base_folder} out of {self.get_total_file_in_folder()} total files present.')
 
 
 # Custom Exception
@@ -118,10 +141,7 @@ if __name__ == '__main__':
         while True:
             print(reader.get_next_file())
 
-    except NoMoreFilesToReadException as e:
-        print(e)
+    except NoMoreFilesToReadException as error:
+        print(error)
 
     reader.write_doc_id_dict()
-
-    # reader.print_process_doc_id_and_file()
-    # print('Total number of files processed: ' + str(reader.get_num_of_file_processed()))
