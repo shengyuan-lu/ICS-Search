@@ -121,7 +121,7 @@ class Reader:
                 self.write_doc_id_dict()
 
                 # If there's no more files to be processed, raise exception
-                raise NoMoreFilesToReadException(f'Reader has processed {self.get_num_of_file_processed()} unique files under folder {self.base_folder} out of {self.get_total_file_in_folder()} total files present.')
+                raise NoMoreFilesToReadException(f'Reader: finished processing {self.get_num_of_file_processed()} unique files under folder {self.base_folder} out of {self.get_total_file_in_folder()} total files present.')
 
 
 # Custom Exception
@@ -141,7 +141,7 @@ if __name__ == '__main__':
         while True:
             print(reader.get_next_file())
 
-    except NoMoreFilesToReadException as e:
-        print(e)
+    except NoMoreFilesToReadException as error:
+        print(error)
 
     reader.write_doc_id_dict()

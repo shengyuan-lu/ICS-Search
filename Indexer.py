@@ -15,6 +15,7 @@ from Memory import Memory
 from Parser import parse
 from Merger import merge_folder
 from Tokenizer import compute_word_frequencies
+from os import path
 import os
 import shutil
 import json
@@ -22,17 +23,19 @@ import json
 
 class Indexer:
 
-    def __init__(self, base_folder):
+    def __init__(self, source_folder, base_folder, merged_index_name):
+        self.source_folder = source_folder
         self.base_folder = base_folder
+        self.merged_index_path =  path.join(base_folder, merged_index_name)
 
 
-    def generate_index_of_index(self, merged_index_path):
+    def generate_index_of_index(self):
 
         # The file name of the generated json file
         index_of_index_file_name = 'index_of_index.json'
 
         # Check if the merged index path is valid
-        if os.path.isfile(merged_index_path):
+        if os.path.isfile(self.merged_index_path):
 
             # Make a new word : char_count dict
             lookup = dict()
@@ -41,7 +44,7 @@ class Indexer:
             char_count = 0
 
             # Open the merged index in read only mode
-            with open(merged_index_path, 'r') as index:
+            with open(self.merged_index_path, 'r') as index:
 
                 # Read every line until there's no more line to read
                 try:
@@ -69,18 +72,19 @@ class Indexer:
                 # Write the word : char_count to the json
                 index_of_index.write(json.dumps(lookup, sort_keys=True, indent=4))
 
-            print(f'{index_of_index_file_name} is successfully generated')
+            print()
+            print(f'Indexer: {index_of_index_file_name} is successfully generated')
 
         else:
-            print(f'Warning: {merged_index_path} does not exist. No {index_of_index_file_name} is generated')
+            print(f'Indexer Warning: {self.merged_index_path} does not exist. No {index_of_index_file_name} is generated')
 
 
     def run(self):
-        reader = Reader(self.base_folder)
+        reader = Reader(self.source_folder)
         memory = Memory()
 
         # Path of the raw Index being generated
-        path = 'Index'
+        path = self.base_folder
 
         # Remove the folder and its content if already exist
         if os.path.exists(path):
@@ -108,11 +112,11 @@ class Indexer:
                 # Store the result to the memory
                 memory.add_page(frequencies, doc_id)
 
-        except NoMoreFilesToReadException as e:
-            print(e)
+        except NoMoreFilesToReadException as error:
+            print(error)
 
             with open('reader_stats.txt', 'w+') as stats:
-                stats.write(str(e))
+                stats.write(str(error))
 
         # Write index to disk
         memory.store_to_disk()
@@ -123,12 +127,10 @@ class Indexer:
         # Merge everything under /Index
         merge_folder(path)
 
-        self.generate_index_of_index('final_index.json')
+        self.generate_index_of_index()
 
 
 # The actual main function to generate the index
 if __name__ == '__main__':
-    indexer = Indexer('DEV_SMALL')
+    indexer = Indexer('DEV', 'Index', 'final_index.txt')
     indexer.run()
-    # indexer.generate_index_of_index('Index/indexfile0.txt')
-    # indexer.generate_index_of_index('test_files/merged.txt')

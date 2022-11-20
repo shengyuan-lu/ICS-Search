@@ -15,17 +15,17 @@ def parse(file: (int, dict)) -> (int, str, str):
     json = file[1]
 
     # Get the url
-    url = json["url"]
+    url = json['url']
 
     # Get the raw html content
-    content = json["content"]
+    content = json['content']
 
     # Turn the raw html into tokenizable text
 
     # Check if the html is valid
-    if BeautifulSoup(content, "html.parser").find():
+    if BeautifulSoup(content, 'html.parser').find():
 
-        soup = BeautifulSoup(content, "html.parser")
+        soup = BeautifulSoup(content, 'html.parser')
 
         text = soup.get_text().strip()
 
@@ -50,7 +50,7 @@ if __name__ == '__main__':
         while True:
             file = reader.get_next_file()
             doc_id, url, raw_text = parse(file)
-            print("url:", url)
+            print('url:', url)
             print(compute_word_frequencies(raw_text))
 
     except NoMoreFilesToReadException as e:
