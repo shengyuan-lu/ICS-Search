@@ -39,7 +39,7 @@ def parse(file: (int, dict)) -> (int, str, list):
         soup = BeautifulSoup(content, 'html.parser')
 
         # A list of special tags
-        special_tags = ['h1', 'h2', 'h3', 'strong', 'b', 'em']
+        special_tags = ['title', 'h1', 'h2', 'h3', 'strong', 'b', 'em']
 
         # Find all special tags
         tags = soup.find_all(special_tags)
@@ -47,7 +47,7 @@ def parse(file: (int, dict)) -> (int, str, list):
         # print(tags)
 
         # Init strings contains special tags
-
+        title = ''
         h1 = ''
         h2 = ''
         h3 = ''
@@ -58,6 +58,8 @@ def parse(file: (int, dict)) -> (int, str, list):
         # For each special tags, append the corresponding string
         for tag in tags:
             match tag.name:
+                case 'title':
+                    title += tag.text.strip() + ' '
                 case 'h1':
                     h1 += tag.text.strip() + ' '
                 case 'h2':
@@ -74,12 +76,12 @@ def parse(file: (int, dict)) -> (int, str, list):
         # Get everything
         body = soup.get_text().strip()
 
-        return doc_id, url, [h1.strip(), h2.strip(), h3.strip(), strong.strip(), b.strip(), em.strip(), body.strip()]
+        return doc_id, url, [title.strip(), h1.strip(), h2.strip(), h3.strip(), strong.strip(), b.strip(), em.strip(), body.strip()]
 
     else:
 
         # Return a list with empty strings if the content is not valid html
-        return doc_id, url, ['', '', '', '', '', '', '', '']
+        return doc_id, url, ['', '', '', '', '', '', '', '', '']
 
 
 if __name__ == '__main__':
