@@ -3,8 +3,8 @@ from bs4 import BeautifulSoup
 from Tokenizer import compute_word_frequencies
 
 
-# parse(file : (int, json_dict)): -> (url : str, html_text : str, doc_id : int)
-def parse(file: (int, dict)) -> (int, str, str):
+# parse(file : (int, json_dict)): -> (doc_id : int, url : str, tag_list : list)
+def parse(file: (int, dict)) -> (int, str, list):
     """
     Parses the loaded html file, extracting the url and raw text
     """
@@ -22,27 +22,71 @@ def parse(file: (int, dict)) -> (int, str, str):
 
     # Turn the raw html into tokenizable text
 
+    # title
+    # h1
+    # h2
+    # h3
+    # strong
+    # b
+    # em
+
+    # body (not a tag)
+
     # Check if the html is valid
     if BeautifulSoup(content, 'html.parser').find():
 
+        # Get a soup object with parsed content using html.parser
         soup = BeautifulSoup(content, 'html.parser')
 
-        text = soup.get_text().strip()
+        # A list of special tags
+        special_tags = ['h1', 'h2', 'h3', 'strong', 'b', 'em']
 
-        # Return the doc_id, url, the raw text content
-        out = (doc_id, url, text)
+        # Find all special tags
+        tags = soup.find_all(special_tags)
 
-        return out
+        # print(tags)
+
+        # Init strings contains special tags
+
+        h1 = ''
+        h2 = ''
+        h3 = ''
+        strong = ''
+        b = ''
+        em = ''
+
+        # For each special tags, append the corresponding string
+        for tag in tags:
+            match tag.name:
+                case 'h1':
+                    h1 += tag.text.strip() + ' '
+                case 'h2':
+                    h2 += tag.text.strip() + ' '
+                case 'h3':
+                    h3 += tag.text.strip() + ' '
+                case 'strong':
+                    strong += tag.text.strip() + ' '
+                case 'b':
+                    b += tag.text.strip() + ' '
+                case 'em':
+                    em += tag.text.strip() + ' '
+
+        # Get everything
+        body = soup.get_text().strip()
+
+        return doc_id, url, [h1.strip(), h2.strip(), h3.strip(), strong.strip(), b.strip(), em.strip(), body.strip()]
 
     else:
-        out = (doc_id, url, '')
 
-        return out
+        # Return a list with empty strings if the content is not valid html
+        return doc_id, url, ['', '', '', '', '', '', '', '']
 
 
 if __name__ == '__main__':
-    reader = Reader('DEV')
 
+    reader = Reader('DEV_SMALL')
+
+    """
     # reader.print_not_processed_sub_folders()
     # reader.print_not_processed_files_in_current_sub_folder()
 
@@ -55,3 +99,7 @@ if __name__ == '__main__':
 
     except NoMoreFilesToReadException as e:
         print(e)
+        
+    """
+
+    print(parse(reader.get_next_file()))
