@@ -9,3 +9,7 @@ a:visited {
 .container {
   padding-top: 15px;
 }
+.de-emp {
+  font-size: 0.9em;
+  opacity: 0.8;
+}
