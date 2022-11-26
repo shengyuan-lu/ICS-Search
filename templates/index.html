@@ -41,13 +41,13 @@
         <button class="btn btn-outline-primary" type="submit">Search</button>
       </form>
       {% if results|length > 0 %}
-      <div class="mt-1 ms-2 de-emp">
-        Querying time: <strong>{{ "%.2f"|format(process_time) }}</strong> ms
+      <div class="mt-1 ms-0 de-emp">
+        Showing {{results|length}} results (<strong>{{ "%.2f"|format(process_time) }}</strong> ms)
       </div>
       {% endif %}
       <section>
         {% if results|length > 0 %} {% for e in results %}
-        <div class="result-item mb-3">
+        <div class="result-item mb-3 ms-0">
           <h3>
             <a href="{{e}}" target="_blank">{{ e }}</a>
           </h3>
