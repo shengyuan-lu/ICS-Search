@@ -18,16 +18,16 @@
         color: #681da8;
       }
 
-      body{
-          height: 100vh;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
+      body {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
       }
-        h1{
-            text-align: center;
-            margin-bottom: 15px;
-        }
+      h1 {
+        text-align: center;
+        margin-bottom: 15px;
+      }
       .container {
         padding-top: 15px;
       }
@@ -54,7 +54,6 @@
         />
         <button class="btn btn-outline-primary" type="submit">Search</button>
       </form>
-
     </div>
     <script>
       let searchform = document.getElementById("searchform");
@@ -67,9 +66,13 @@
         if (results == null) return "";
         else return decodeURIComponent(results[1].replace(/\+/g, " "));
       }
-
+      let query_input = document.getElementById("query");
       searchform.onsubmit = function (e) {
-        console.log(query_input.value);
+        if (query_input.value.trim() == "") {
+          e.preventDefault();
+        } else {
+          return true;
+        }
       };
     </script>
   </body>
