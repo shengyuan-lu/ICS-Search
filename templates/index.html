@@ -74,7 +74,11 @@
       let query_input = document.getElementById("query");
       query_input.value = getParameterByName("query");
       searchform.onsubmit = function (e) {
-        console.log(query_input.value);
+        if (query_input.value.trim() == "") {
+          e.preventDefault();
+        } else {
+          return true;
+        }
       };
     </script>
   </body>
