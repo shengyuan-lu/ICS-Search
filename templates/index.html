@@ -13,20 +13,12 @@
       integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
       crossorigin="anonymous"
     ></script>
-    <style>
-      a:visited {
-        color: #681da8;
-      }
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
 
-      .result-item {
-        margin: 12px;
-      }
-
-      .container {
-        padding-top: 15px;
-      }
-    </style>
-    <title>zot search</title>
+    <title>{{ query }} - Zot Search</title>
   </head>
   <body>
     <div class="container">
@@ -46,14 +38,26 @@
           id="query"
           name="query"
         />
-        <button class="btn btn-outline-success" type="submit">Search</button>
+        <button class="btn btn-outline-primary" type="submit">Search</button>
       </form>
+      {% if results|length > 0 %}
+      <div class="mt-1 ms-0 de-emp">
+        Showing {{results|length}} results (<strong>{{ "%.2f"|format(process_time) }}</strong> ms)
+      </div>
+      {% endif %}
       <section>
-        {% for e in results %}
-        <div class="result-item">
-          <a href="{{e}}" target="_blank">{{ e }}</a>
+        {% if results|length > 0 %} {% for e in results %}
+        <div class="result-item mb-3 ms-0">
+          <h3>
+            <a href="{{e}}" target="_blank">{{ e }}</a>
+          </h3>
         </div>
-        {% endfor %}
+        {% endfor %} {% else %}
+        <div class="mt-2">
+          Your search - <strong id="query-str">{{ query }}</strong> - does not
+          match any documents in our record
+        </div>
+        {% endif %}
       </section>
     </div>
     <script>
@@ -70,7 +74,11 @@
       let query_input = document.getElementById("query");
       query_input.value = getParameterByName("query");
       searchform.onsubmit = function (e) {
-        console.log(query_input.value);
+        if (query_input.value.trim() == "") {
+          e.preventDefault();
+        } else {
+          return true;
+        }
       };
     </script>
   </body>

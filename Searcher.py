@@ -13,6 +13,7 @@ import re
 import json
 import os
 from nltk.stem import PorterStemmer
+import time
 
 app = Flask(__name__)
 
@@ -103,6 +104,9 @@ class Searcher:
 
 @app.route('/search')
 def search():
+    start_time = time.time()
+
+
     query = request.args.get('query')
     query = query.strip()
 
@@ -113,8 +117,8 @@ def search():
 
     search_query = Searcher(query)
     results = search_query.get_results()
-
-    return render_template('index.html', results = results)
+    end_time = time.time()
+    return render_template('index.html', results = results, process_time = (end_time-start_time)*1000, query = query)
 
 
 @app.route('/')

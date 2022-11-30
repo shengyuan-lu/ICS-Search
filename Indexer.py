@@ -1,6 +1,4 @@
 # GOAL For Indexer
-import json
-
 # Create an inverted index for the given corpus with data structures designed by you.
 
 # Tokens: all alphanumeric sequences in the dataset.
@@ -19,6 +17,7 @@ from os import path
 import os
 import shutil
 import json
+import time
 
 
 class Indexer:
@@ -73,13 +72,20 @@ class Indexer:
                 index_of_index.write(json.dumps(lookup, sort_keys=True, indent=4))
 
             print()
-            print(f'Indexer: {index_of_index_file_name} is successfully generated')
+            log = f'Indexer: {index_of_index_file_name} is successfully generated'
+            print(log)
+
+            with open('indexer_stats.txt', 'w+') as stats:
+                stats.write(log + '\n')
 
         else:
             print(f'Indexer Warning: {self.merged_index_path} does not exist. No {index_of_index_file_name} is generated')
 
 
     def run(self):
+
+        index_start_time = time.time()
+
         reader = Reader(self.source_folder)
         memory = Memory()
 
@@ -97,6 +103,9 @@ class Indexer:
 
         if os.path.exists('memory_stats.txt'):
             os.remove('memory_stats.txt')
+
+        if os.path.exists('indexer_stats.txt'):
+            os.remove('indexer_stats.txt')
 
         try:
             while True:
@@ -128,6 +137,13 @@ class Indexer:
         merge_folder(path)
 
         self.generate_index_of_index()
+
+        index_finish_time = time.time()
+
+        with open('indexer_stats.txt', 'a+') as stats:
+            time_lapse_log = 'Indexer: ' + str('%.2f' % ((index_finish_time - index_start_time)/60)) + ' minutes used to build index'
+            print(time_lapse_log)
+            stats.write(time_lapse_log)
 
 
 # The actual main function to generate the index
