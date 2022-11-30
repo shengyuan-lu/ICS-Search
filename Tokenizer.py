@@ -22,20 +22,22 @@ def compute_word_frequencies(textContent:list) -> 'dict':
             token = ps.stem(token)
 
             if token in token_map.keys():
-                token_map[token]["freq"] += weight_map[index]
-                token_map[token]["pos"].add(idx)
+                token_map[token]['freq'] += weight_map[index]
+                token_map[token]['pos'].add(idx)
+
                 if index != 7:
                     special_map[token] += 1
             else:
                 init_dict = dict()
-                init_dict["freq"] = weight_map[index]
-                init_dict["pos"] = set()
-                init_dict["pos"].add(idx)
+                init_dict['freq'] = weight_map[index]
+                init_dict['pos'] = set()
+                init_dict['pos'].add(idx)
                 token_map[token] = init_dict
+
                 if index != 7:
                     special_map[token] = 1
 
     for key, val in special_map.items():
-        token_map[key]["freq"] -= val
+        token_map[key]['freq'] -= val
 
     return token_map
