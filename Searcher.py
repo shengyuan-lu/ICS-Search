@@ -14,6 +14,7 @@ import json
 import os
 from nltk.stem import PorterStemmer
 import time
+import math
 
 app = Flask(__name__)
 
@@ -50,6 +51,9 @@ class Searcher:
 
                 json_line = json.loads(json_line)
                 postings = json_line[stemmed_token]
+                print('postings:',postings)
+                df = len(postings)
+                print(token,":",df)
                 new_dict = dict()
 
                 # if the result dictionary is empty
@@ -58,7 +62,8 @@ class Searcher:
 
                         new_dict[docId] = {token:postings[docId]}
                         new_dict[docId]['url'] = self.id_to_url[docId]
-                        new_dict[docId]['score'] = postings[docId]
+                        tf = postings[docId]
+                        new_dict[docId]['score'] = self.compute_tfIdf(df,tf)
                     self.results = new_dict
                 # if not empty
                 else:
@@ -68,8 +73,9 @@ class Searcher:
 
                             new_dict[docId] = self.results[docId]
                             new_dict[docId]['url'] = self.id_to_url[docId]
+                            tf = postings[docId]
                             new_dict[docId][token] = postings[docId]
-                            new_dict[docId]['score'] += postings[docId]
+                            new_dict[docId]['score'] += self.compute_tfIdf(df,tf)
 
                     self.results = new_dict
 
@@ -80,7 +86,8 @@ class Searcher:
         self.index_of_index_json = json.load(index_of_index)
         index_of_index.close()
 
-
+    def compute_tfIdf(self,df,tf):
+        return (1+math.log(tf,10))*math.log(self.n/df,10)
     def tokenize(self):
         pattern = '\s+'
         return re.split(pattern,self.query)
@@ -89,6 +96,7 @@ class Searcher:
     def read_doc_id_dict(self):
         f = open('doc_id_dict.json')
         self.id_to_url = json.load(f)
+        self.n = len(self.id_to_url)
         f.close()
 
 
@@ -127,4 +135,4 @@ def launch():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(port=8080, debug=True)
