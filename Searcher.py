@@ -51,9 +51,9 @@ class Searcher:
 
                 json_line = json.loads(json_line)
                 postings = json_line[stemmed_token]
-                print('postings:',postings)
+                # print('postings:',postings)
                 df = len(postings)
-                print(token,":",df)
+                # print(token,":",df)
                 new_dict = dict()
 
                 # if the result dictionary is empty
@@ -86,8 +86,11 @@ class Searcher:
         self.index_of_index_json = json.load(index_of_index)
         index_of_index.close()
 
+
     def compute_tfIdf(self,df,tf):
         return (1+math.log(tf,10))*math.log(self.n/df,10)
+
+
     def tokenize(self):
         pattern = '\s+'
         return re.split(pattern,self.query)
