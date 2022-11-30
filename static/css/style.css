@@ -1,0 +1,15 @@
+a:visited {
+  color: #681da8;
+}
+
+.result-item {
+  margin: 12px;
+}
+
+.container {
+  padding-top: 15px;
+}
+.de-emp {
+  font-size: 0.9em;
+  opacity: 0.8;
+}
