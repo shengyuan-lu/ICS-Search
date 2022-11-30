@@ -53,33 +53,30 @@ class Searcher:
                 postings = json_line[stemmed_token]
                 # print('postings:',postings)
                 df = len(postings)
+
                 # print(token,":",df)
-                new_dict = dict()
 
                 # if the result dictionary is empty
-                if not bool(self.results):
-                    for docId in postings:
 
-                        new_dict[docId] = {token:postings[docId]}
-                        new_dict[docId]['url'] = self.id_to_url[docId]
-                        tf = postings[docId]
-                        new_dict[docId]['score'] = self.compute_tfIdf(df,tf)
-                    self.results = new_dict
-                # if not empty
-                else:
-                    for docId in postings:
+                for docId in postings:
+
                         #docId = self.idToUrl[docId]
-                        if docId in self.results:
 
-                            new_dict[docId] = self.results[docId]
-                            new_dict[docId]['url'] = self.id_to_url[docId]
-                            tf = postings[docId]
-                            new_dict[docId][token] = postings[docId]
-                            new_dict[docId]['score'] += self.compute_tfIdf(df,tf)
+                    if docId not in self.results:
 
-                    self.results = new_dict
+                        self.results[docId] = {token:postings[docId]}
+                        self.results[docId]['score'] = 0
+
+
+                    self.results[docId]['url'] = self.id_to_url[docId]
+                    tf = postings[docId]
+                    self.results[docId][token] = postings[docId]
+                    self.results[docId]['score'] += self.compute_tfIdf(df,tf)
+
+
 
         self.sort_results()
+        #print(self.sorted_results[0:5])
 
     def read_index_of_index(self):
         index_of_index = open('index_of_index.json')
