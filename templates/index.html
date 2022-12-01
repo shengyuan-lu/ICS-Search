@@ -45,12 +45,25 @@
         Showing {{results|length}} results (<strong>{{ "%.2f"|format(process_time) }}</strong> ms)
       </div>
       {% endif %}
-      <section>
+      <section class="mt-4">
         {% if results|length > 0 %} {% for e in results %}
-        <div class="result-item mb-3 ms-0">
-          <h3>
-            <a href="{{e}}" target="_blank">{{ e }}</a>
+        <div class="result-item mb-4 ms-0">
+          <h3 class="mb-1">
+            <a href="{{e.url}}" target="_blank">{{ e.url }}</a>
           </h3>
+
+          <div class="de-emp mt-0">
+            {% if e.missing|length > 0 %}
+            Missing:
+            {% for missing in e.missing %}
+            <del>{{missing}}</del>
+            {% endfor %}
+            {% else %}
+            contains all keywords
+            {% endif %}
+          </div>
+
+
         </div>
         {% endfor %} {% else %}
         <div class="mt-2">
