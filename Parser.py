@@ -57,21 +57,20 @@ def parse(file: (int, dict)) -> (int, str, list):
 
         # For each special tags, append the corresponding string
         for tag in tags:
-            match tag.name:
-                case 'title':
-                    title += tag.text.strip() + ' '
-                case 'h1':
-                    h1 += tag.text.strip() + ' '
-                case 'h2':
-                    h2 += tag.text.strip() + ' '
-                case 'h3':
-                    h3 += tag.text.strip() + ' '
-                case 'strong':
-                    strong += tag.text.strip() + ' '
-                case 'b':
-                    b += tag.text.strip() + ' '
-                case 'em':
-                    em += tag.text.strip() + ' '
+            if tag.name == 'title':
+                title += tag.text.strip() + ' '
+            elif tag.name == 'h1':
+                h1 += tag.text.strip() + ' '
+            elif tag.name == 'h2':
+                h2 += tag.text.strip() + ' '
+            elif tag.name == 'h3':
+                h3 += tag.text.strip() + ' '
+            elif tag.name == 'strong':
+                strong += tag.text.strip() + ' '
+            elif tag.name == 'b':
+                b += tag.text.strip() + ' '
+            elif tag.name == 'em':
+                em += tag.text.strip() + ' '
 
         # Get everything
         body = soup.get_text().strip()
