@@ -63,20 +63,23 @@ class Searcher:
                         #docId = self.idToUrl[docId]
 
                     if docId not in self.results:
-
-                        self.results[docId] = {token:postings[docId]}
+                        self.results[docId] = dict()
+                        self.results[docId]['tokens'] = {token:postings[docId]}
                         self.results[docId]['score'] = 0
+                        self.results[docId]['url'] = self.id_to_url[docId]
+                        self.results[docId]['missing'] = set(tokens)
 
 
-                    self.results[docId]['url'] = self.id_to_url[docId]
+
                     tf = postings[docId]
-                    self.results[docId][token] = postings[docId]
+                    self.results[docId]['tokens'][token] = postings[docId]
                     self.results[docId]['score'] += self.compute_tfIdf(df,tf)
+                    self.results[docId]['missing'] -= {token}
 
 
 
         self.sort_results()
-        #print(self.sorted_results[0:5])
+        print(self.sorted_results[0:5])
 
     def read_index_of_index(self):
         index_of_index = open('index_of_index.json')
@@ -101,13 +104,13 @@ class Searcher:
 
 
     def get_results(self, limit = 5):
-        result = map(lambda t:t[1]['url'], self.sorted_results[0:limit])
+        result = map(lambda t:t[1], self.sorted_results[0:limit])
 
         return list(result)
 
 
     def sort_results(self):
-        self.sorted_results = sorted(self.results.items(), key=lambda t: -t[1]['score'])
+        self.sorted_results = sorted(self.results.items(), key=lambda t: (len(t[1]['missing']), -t[1]['score']))
 
 
 @app.route('/search')
@@ -124,7 +127,7 @@ def search():
     print('Original Query: ' + query)
 
     search_query = Searcher(query)
-    results = search_query.get_results()
+    results = search_query.get_results(10)
     end_time = time.time()
     return render_template('index.html', results = results, process_time = (end_time-start_time)*1000, query = query)
 
