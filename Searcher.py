@@ -87,8 +87,8 @@ class Searcher:
         index_of_index.close()
 
 
-    def compute_tfIdf(self,df,tf):
-        return (1+math.log(tf,10))*math.log(self.n/df,10)
+    def compute_tfIdf(self, df, tf):
+        return (1+math.log(tf, 10)) * math.log(self.total_document_count / df, 10)
 
 
     def tokenize(self):
@@ -99,7 +99,7 @@ class Searcher:
     def read_doc_id_dict(self):
         f = open('doc_id_dict.json')
         self.id_to_url = json.load(f)
-        self.n = len(self.id_to_url)
+        self.total_document_count = len(self.id_to_url)
         f.close()
 
 
@@ -129,6 +129,7 @@ def search():
     search_query = Searcher(query)
     results = search_query.get_results(10)
     end_time = time.time()
+
     return render_template('index.html', results = results, process_time = (end_time-start_time)*1000, query = query)
 
 
