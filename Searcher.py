@@ -42,7 +42,10 @@ class Searcher:
         self.read_doc_id_dict()
 
         for token in tokens:
-            stemmed_token = ps.stem(token)
+            if len(token)>3:
+                stemmed_token = ps.stem(token)
+            else:
+                stemmed_token = token
 
             if stemmed_token in self.index_of_index_json:
                 pos = self.index_of_index_json[stemmed_token]
@@ -111,7 +114,7 @@ class Searcher:
 
     def sort_results(self):
         self.sorted_results = sorted(self.results.items(), key=lambda t: (len(t[1]['missing']), -t[1]['score']))
-
+        #self.sorted_results = sorted(self.results.items(), key=lambda t: (-t[1]['score']))
 
 @app.route('/search')
 def search():

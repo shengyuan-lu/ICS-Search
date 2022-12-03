@@ -3,8 +3,14 @@ from nltk.stem import PorterStemmer
 def tokenize(content: 'str') -> 'list':
 
     pattern = "[a-zA-Z0-9]+'?’?[a-zA-Z0-9]*"
-    result = re.findall(pattern, content.lower())
-    return result
+    emailpattern = r"([a-z0-9\.\-+_]+@[a-z0-9\.\-+_]+\.[a-z]+)"
+    telpattern = r"((?:\+\d{2}[-\.\s]??|\d{4}[-\.\s]??)?(?:\d{3}[-\.\s]??\d{3}[-\.\s]??\d{4}|\(\d{3}\)\s*\d{3}[-\.\s]??\d{4}|\d{3}[-\.\s]??\d{4}))"
+    content = content.lower()
+    result = re.findall(pattern, content)
+    emails = re.findall(emailpattern,content)
+    tels = re.findall(telpattern,content)
+
+    return result+emails+tels
 
 
 # textContent = processed text from HTML
@@ -19,7 +25,8 @@ def compute_word_frequencies(textContent:list) -> 'dict':
         token_list = tokenize(text)
 
         for idx, token in enumerate(token_list):
-            token = ps.stem(token)
+            if len(token) > 3:
+                token = ps.stem(token)
 
             if token in token_map.keys():
                 token_map[token]['freq'] += weight_map[index]
