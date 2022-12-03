@@ -2,15 +2,17 @@ import re
 from nltk.stem import PorterStemmer
 def tokenize(content: 'str') -> 'list':
 
+    content = content.lower()
+
     pattern = "[a-zA-Z0-9]+'?’?[a-zA-Z0-9]*"
     emailpattern = r"([a-z0-9\.\-+_]+@[a-z0-9\.\-+_]+\.[a-z]+)"
     telpattern = r"((?:\+\d{2}[-\.\s]??|\d{4}[-\.\s]??)?(?:\d{3}[-\.\s]??\d{3}[-\.\s]??\d{4}|\(\d{3}\)\s*\d{3}[-\.\s]??\d{4}|\d{3}[-\.\s]??\d{4}))"
-    content = content.lower()
+
     result = re.findall(pattern, content)
     emails = re.findall(emailpattern,content)
     tels = re.findall(telpattern,content)
 
-    return result+emails+tels
+    return result + emails + tels
 
 
 # textContent = processed text from HTML
