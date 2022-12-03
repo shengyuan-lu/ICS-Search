@@ -42,7 +42,11 @@ class Searcher:
         self.read_doc_id_dict()
 
         for token in tokens:
-            stemmed_token = ps.stem(token)
+            if len(token)>3:
+                stemmed_token = ps.stem(token)
+            else:
+                stemmed_token = token
+            stemmed_token = stemmed_token.lower()
 
             if stemmed_token in self.index_of_index_json:
                 pos = self.index_of_index_json[stemmed_token]
@@ -51,16 +55,10 @@ class Searcher:
 
                 json_line = json.loads(json_line)
                 postings = json_line[stemmed_token]
-                # print('postings:',postings)
+
                 df = len(postings)
 
-                # print(token,":",df)
-
-                # if the result dictionary is empty
-
                 for docId in postings:
-
-                        #docId = self.idToUrl[docId]
 
                     if docId not in self.results:
                         self.results[docId] = dict()
@@ -69,17 +67,14 @@ class Searcher:
                         self.results[docId]['url'] = self.id_to_url[docId]
                         self.results[docId]['missing'] = set(tokens)
 
-
-
                     tf = postings[docId]
                     self.results[docId]['tokens'][token] = postings[docId]
-                    self.results[docId]['score'] += self.compute_tfIdf(df,tf)
+                    self.results[docId]['score'] += self.compute_tfIdf(df, tf)
                     self.results[docId]['missing'] -= {token}
-
-
 
         self.sort_results()
         print(self.sorted_results[0:5])
+
 
     def read_index_of_index(self):
         index_of_index = open('index_of_index.json')
@@ -91,9 +86,19 @@ class Searcher:
         return (1+math.log(tf, 10)) * math.log(self.total_document_count / df, 10)
 
 
+    def remove_empty(self, lst):
+        if "" not in lst:
+            return lst
+        lst.remove("")
+        return self.remove_empty(lst)
+
+
     def tokenize(self):
-        pattern = '\s+'
-        return re.split(pattern,self.query)
+
+        pattern = '[\s\-\(\)]+'
+        token_lst = re.split(pattern, self.query)
+
+        return self.remove_empty(token_lst)
 
 
     def read_doc_id_dict(self):
