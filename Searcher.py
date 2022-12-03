@@ -85,10 +85,11 @@ class Searcher:
 
     def tokenize(self):
 
-        pattern = '[\s\-\(\)]+'
-        token_lst = re.split(pattern, self.query)
+        reg_pattern = '[\s\-\(\)]+'
 
-        return self.remove_empty(token_lst)
+        reg_token = re.split(reg_pattern, self.query)
+
+        return self.remove_empty(reg_token)
 
 
     def read_doc_id_dict(self):
@@ -121,7 +122,7 @@ def search():
     print('Original Query: ' + query)
 
     search_query = Searcher(query)
-    results = search_query.get_results(10)
+    results = search_query.get_results(5)
     end_time = time.time()
 
     return render_template('index.html', results = results, process_time = (end_time-start_time)*1000, query = query)
