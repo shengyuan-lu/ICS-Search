@@ -85,7 +85,7 @@ def parse(file: (int, dict)) -> (int, str, list):
 
 if __name__ == '__main__':
 
-    reader = Reader('DEV_SMALL')
+    reader = Reader('TEST')
 
     """
     # reader.print_not_processed_sub_folders()
