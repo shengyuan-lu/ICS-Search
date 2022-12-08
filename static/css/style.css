@@ -51,3 +51,7 @@ a:visited {
   color: #0064a4;
   border-color: #ced4da;
 }
+
+h3 {
+  font-size: calc(1rem + 0.5vw);
+}
