@@ -47,25 +47,38 @@
         </form>
       </div>
     </div>
+    <header>
+      <div id="h1-container">
+        <h1 class="container text-center mb-0 uci-blue pb-2">ICS Search</h1>
+      </div>
+      <div id="form-container">
+        <div class="container pt-0">
+          <form
+            class="d-flex shadow-sm"
+            role="search"
+            id="searchform"
+            method="get"
+            action="/search"
+          >
+            <input
+              class="form-control me-0 bg-white radius-left"
+              type="search"
+              placeholder="Search..."
+              aria-label="Search"
+              id="query"
+              name="query"
+            />
+            <button
+              class="btn btn-outline-primary bg-white uci-blue radius-right border-grey border-start-0"
+              type="submit"
+            >
+              Search
+            </button>
+          </form>
+        </div>
+      </div>
+    </header>
     <div class="container">
-      <h1>ICS Search</h1>
-      <form
-        class="d-flex"
-        role="search"
-        id="searchform"
-        method="get"
-        action="/search"
-      >
-        <input
-          class="form-control me-2"
-          type="search"
-          placeholder="Search..."
-          aria-label="Search"
-          id="query"
-          name="query"
-        />
-        <button class="btn btn-outline-primary" type="submit">Search</button>
-      </form>
       {% if results|length > 0 %}
       <div class="mt-1 ms-0 de-emp">
         Showing {{results|length}} results (<strong
@@ -74,7 +87,7 @@
         ms)
       </div>
       {% endif %}
-      <section class="mt-4" id="results">
+      <section class="mt-2" id="results">
         {% if results|length > 0 %} {% for e in results %}
         <div class="result-item mb-4 ms-0">
           <h3 class="mb-1">
@@ -98,6 +111,7 @@
     </div>
     <script>
       let searchform = document.getElementById("searchform");
+      let searchform_top = document.getElementById("searchform-top");
       let navtop = document.getElementById("nav-top");
       let results = document.getElementById("results");
       document.onscroll = function (e) {
@@ -117,6 +131,14 @@
         else return decodeURIComponent(results[1].replace(/\+/g, " "));
       }
       let query_input = document.getElementById("query");
+      let query_top = document.getElementById("query-top");
+      searchform_top.onsubmit = function (e) {
+        if (query_top.value.trim() == "") {
+          e.preventDefault();
+        } else {
+          return true;
+        }
+      };
       query_input.value = getParameterByName("query");
       searchform.onsubmit = function (e) {
         if (query_input.value.trim() == "") {
