@@ -1,5 +1,6 @@
 import re
 from nltk.stem import PorterStemmer
+
 def tokenize(content: 'str') -> 'list':
 
     content = content.lower()

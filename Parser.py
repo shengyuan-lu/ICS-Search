@@ -1,4 +1,4 @@
-from Reader import Reader, NoMoreFilesToReadException
+from Reader import Reader
 from bs4 import BeautifulSoup
 
 # parse(file : (int, json_dict)): -> (doc_id : int, url : str, tag_list : list)

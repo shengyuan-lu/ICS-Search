@@ -1,12 +1,8 @@
-from flask import Flask, request, render_template
 import re
 import json
 import os
 from nltk.stem import PorterStemmer
-import time
 import math
-
-app = Flask(__name__)
 
 class Searcher:
 

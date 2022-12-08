@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, render_template
+from flask import Flask, request, render_template
 import time
 from Searcher import Searcher
 
@@ -7,8 +7,6 @@ app = Flask(__name__)
 @app.route('/search')
 def search():
     start_time = time.time()
-
-
     query = request.args.get('query')
     query = query.strip()
 
