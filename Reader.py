@@ -132,7 +132,7 @@ class NoMoreFilesToReadException(Exception):
 # ** This part is just for testing the Reader class **
 # Use the main function in Indexer.py to build the indexer with this class
 if __name__ == '__main__':
-    reader = Reader('DEV_SMALL')
+    reader = Reader('TEST')
 
     # reader.print_not_processed_sub_folders()
     # reader.print_not_processed_files_in_current_sub_folder()

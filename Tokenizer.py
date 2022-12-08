@@ -5,12 +5,12 @@ def tokenize(content: 'str') -> 'list':
     content = content.lower()
 
     pattern = "[a-zA-Z0-9]+'?’?[a-zA-Z0-9]*"
-    emailpattern = r"([a-z0-9\.\-+_]+@[a-z0-9\.\-+_]+\.[a-z]+)"
-    telpattern = r"((?:\+\d{2}[-\.\s]??|\d{4}[-\.\s]??)?(?:\d{3}[-\.\s]??\d{3}[-\.\s]??\d{4}|\(\d{3}\)\s*\d{3}[-\.\s]??\d{4}|\d{3}[-\.\s]??\d{4}))"
+    email_pattern = r"([a-z0-9\.\-+_]+@[a-z0-9\.\-+_]+\.[a-z]+)"
+    tel_pattern = r"((?:\+\d{2}[-\.\s]??|\d{4}[-\.\s]??)?(?:\d{3}[-\.\s]??\d{3}[-\.\s]??\d{4}|\(\d{3}\)\s*\d{3}[-\.\s]??\d{4}|\d{3}[-\.\s]??\d{4}))"
 
     result = re.findall(pattern, content)
-    emails = re.findall(emailpattern,content)
-    tels = re.findall(telpattern,content)
+    emails = re.findall(email_pattern, content)
+    tels = re.findall(tel_pattern, content)
 
     return result + emails + tels
 
