@@ -13,3 +13,16 @@ a:visited {
   font-size: 0.9em;
   opacity: 0.8;
 }
+#nav-top {
+  z-index: 100;
+  transform: scaleY(1);
+  transition-duration: 0.2s;
+  transform-origin: top;
+}
+#nav-top.dn {
+  transform: scaleY(0);
+}
+
+.uci-blue {
+  color: #0064a4;
+}
