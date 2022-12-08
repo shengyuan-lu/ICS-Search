@@ -1,22 +1,8 @@
-# GOAL For Search
-
-# Your program should prompt the user for a query.
-# This doesn’t need to be a Web interface, it can be a console prompt.
-# At the time of the query, your program will stem the query terms, look up your index, perform some calculations (see ranking below) and give out the ranked list of pages that are relevant for the query, with the most relevant on top.
-# Pages should be identified by their URLs.
-
-# Ranking: at the very least, your ranking formula should include tf-idf scoring, and take the important words into consideration, but you should feel free to add additional components to this formula if you think they improve the retrieval.
-
-# IMPORT OTHER CLASSES HERE
-from flask import Flask, jsonify, request, render_template
 import re
 import json
 import os
 from nltk.stem import PorterStemmer
-import time
 import math
-
-app = Flask(__name__)
 
 class Searcher:
 
@@ -95,10 +81,11 @@ class Searcher:
 
     def tokenize(self):
 
-        pattern = '[\s\-\(\)]+'
-        token_lst = re.split(pattern, self.query)
+        reg_pattern = '[\s\-\(\)]+'
 
-        return self.remove_empty(token_lst)
+        reg_token = re.split(reg_pattern, self.query)
+
+        return self.remove_empty(reg_token)
 
 
     def read_doc_id_dict(self):
@@ -116,32 +103,3 @@ class Searcher:
 
     def sort_results(self):
         self.sorted_results = sorted(self.results.items(), key=lambda t: (len(t[1]['missing']), -t[1]['score']))
-
-
-@app.route('/search')
-def search():
-    start_time = time.time()
-
-
-    query = request.args.get('query')
-    query = query.strip()
-
-    if not query:
-        query = ''
-
-    print('Original Query: ' + query)
-
-    search_query = Searcher(query)
-    results = search_query.get_results(10)
-    end_time = time.time()
-
-    return render_template('index.html', results = results, process_time = (end_time-start_time)*1000, query = query)
-
-
-@app.route('/')
-def launch():
-    return render_template('main.html')
-
-
-if __name__ == '__main__':
-    app.run(port=8080, debug=True)

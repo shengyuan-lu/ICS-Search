@@ -21,6 +21,32 @@
     <title>{{ query }} - ICS Search</title>
   </head>
   <body>
+    <div
+      class="position-fixed w-100 bg-white pt-2 pb-2 shadow-sm dn"
+      id="nav-top"
+    >
+      <div class="container pt-0 d-flex align-items-center">
+        <span class="me-2 fw-semibold uci-blue">ICS Search</span>
+        <form
+          class="d-flex flex-grow-1"
+          role="search"
+          id="searchform-top"
+          method="get"
+          action="/search"
+        >
+          <input
+            class="form-control me-2"
+            type="search"
+            placeholder="Search..."
+            aria-label="Search"
+            id="query-top"
+            value="{{ query }}"
+            name="query"
+          />
+          <button class="btn btn-outline-primary" type="submit">Search</button>
+        </form>
+      </div>
+    </div>
     <div class="container">
       <h1>ICS Search</h1>
       <form
@@ -42,10 +68,13 @@
       </form>
       {% if results|length > 0 %}
       <div class="mt-1 ms-0 de-emp">
-        Showing {{results|length}} results (<strong>{{ "%.2f"|format(process_time) }}</strong> ms)
+        Showing {{results|length}} results (<strong
+          >{{ "%.2f"|format(process_time) }}</strong
+        >
+        ms)
       </div>
       {% endif %}
-      <section class="mt-4">
+      <section class="mt-4" id="results">
         {% if results|length > 0 %} {% for e in results %}
         <div class="result-item mb-4 ms-0">
           <h3 class="mb-1">
@@ -53,17 +82,11 @@
           </h3>
 
           <div class="de-emp mt-0">
-            {% if e.missing|length > 0 %}
-            Missing:
-            {% for missing in e.missing %}
+            {% if e.missing|length > 0 %} Missing: {% for missing in e.missing
+            %}
             <del>{{missing}}</del>
-            {% endfor %}
-            {% else %}
-            contains all keywords
-            {% endif %}
+            {% endfor %} {% else %} contains all keywords {% endif %}
           </div>
-
-
         </div>
         {% endfor %} {% else %}
         <div class="mt-2">
@@ -75,7 +98,16 @@
     </div>
     <script>
       let searchform = document.getElementById("searchform");
-
+      let navtop = document.getElementById("nav-top");
+      let results = document.getElementById("results");
+      document.onscroll = function (e) {
+        if (window.scrollY >= results.offsetTop) {
+          //console.log(navtop);
+          navtop.classList.remove("dn");
+        } else {
+          navtop.classList.add("dn");
+        }
+      };
       function getParameterByName(name) {
         name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
         var regexS = "[\\?&]" + name + "=([^&#]*)";
