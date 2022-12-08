@@ -1,7 +1,5 @@
 from Reader import Reader, NoMoreFilesToReadException
 from bs4 import BeautifulSoup
-from Tokenizer import compute_word_frequencies
-
 
 # parse(file : (int, json_dict)): -> (doc_id : int, url : str, tag_list : list)
 def parse(file: (int, dict)) -> (int, str, list):
@@ -85,7 +83,7 @@ def parse(file: (int, dict)) -> (int, str, list):
 
 if __name__ == '__main__':
 
-    reader = Reader('DEV_SMALL')
+    reader = Reader('TEST')
 
     """
     # reader.print_not_processed_sub_folders()

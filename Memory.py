@@ -1,10 +1,6 @@
 import json
 from os.path import getsize
 import os
-import shutil
-from Reader import Reader, NoMoreFilesToReadException
-from Parser import parse
-from Tokenizer import compute_word_frequencies
 
 class Memory:
 
