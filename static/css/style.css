@@ -1,4 +1,4 @@
-a:visited {
+#results a:visited {
   color: #681da8;
 }
 
@@ -43,7 +43,12 @@ a:visited {
   border-radius: 0 0.375rem 0.375rem 0;
   margin-left: 0;
 }
-
+a.logo {
+  text-decoration: none;
+}
+a.logo:hover {
+  color: #0064a4;
+}
 .border-grey {
   border-color: #ced4da;
 }

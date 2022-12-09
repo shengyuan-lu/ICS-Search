@@ -27,7 +27,7 @@
       id="nav-top"
     >
       <div class="container pt-0 d-flex align-items-center">
-        <span class="me-2 fw-semibold uci-blue">ICS Search</span>
+        <a class="me-2 fw-semibold uci-blue logo" href="/">ICS Search</a>
         <form
           class="d-flex flex-grow-1"
           role="search"
@@ -50,12 +50,14 @@
     </div>
     <header>
       <div id="h1-container">
-        <h1 class="container text-center mb-0 uci-blue pb-2">ICS Search</h1>
+        <h1 class="container text-center mb-0 uci-blue pb-2">
+          <a href="/" class="uci-blue logo">ICS Search</a>
+        </h1>
       </div>
       <div id="form-container">
         <div class="container pt-0">
           <form
-            class="d-flex shadow-sm"
+            class="d-flex shadow-sm rounded"
             role="search"
             id="searchform"
             method="get"
@@ -79,7 +81,7 @@
         </div>
       </div>
     </header>
-    <div class="container">
+    <div class="container" id="results">
       {% if results|length > 0 %}
       <div class="mt-1 ms-0 de-emp">
         Showing {{results|length}} results (<strong
@@ -88,11 +90,13 @@
         ms)
       </div>
       {% endif %}
-      <section class="mt-2" id="results">
+      <section class="mt-2">
         {% if results|length > 0 %} {% for e in results %}
         <div class="result-item mb-4 ms-0">
           <h3 class="mb-1">
-            <a href="{{e.url}}" target="_blank">{{ e.url }}</a>
+            <a href="{{e.url}}" target="_blank" class="text-break"
+              >{{ e.url }}</a
+            >
           </h3>
 
           <div class="de-emp mt-0">
