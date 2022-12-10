@@ -16,8 +16,9 @@ class Searcher:
         self.id_to_url = None
 
         self.query = query
-
-        final_index_path = os.path.join('Index', 'final_index.txt')
+        self.file_path = os.path.dirname(os.path.abspath(__name__))
+        print(self.file_path)
+        final_index_path = os.path.join(self.file_path,'Index', 'final_index.txt')
         self.final_index_file = open(final_index_path, 'r')
 
         tokens = self.tokenize()
@@ -67,7 +68,8 @@ class Searcher:
 
 
     def read_index_of_index(self):
-        index_of_index = open('index_of_index.json')
+        complete_path = os.path.join(self.file_path,'index_of_index.json')
+        index_of_index = open(complete_path)
         self.index_of_index_json = json.load(index_of_index)
         index_of_index.close()
 
@@ -93,17 +95,23 @@ class Searcher:
 
 
     def read_doc_id_dict(self):
-        f = open('doc_id_dict.json')
+        complete_path = os.path.join(self.file_path,'doc_id_dict.json')
+        f = open(complete_path)
         self.id_to_url = json.load(f)
         self.total_document_count = len(self.id_to_url)
         f.close()
 
 
-    def get_results(self, limit = 5):
-        result = map(lambda t:t[1], self.sorted_results[0:limit])
+    def get_results(self, limit = 5,page=1):
+        
+        result = map(lambda t:t[1], self.sorted_results[((page-1)*limit):((page-1)*limit+limit)])
 
         return list(result)
 
 
     def sort_results(self):
         self.sorted_results = sorted(self.results.items(), key=lambda t: (len(t[1]['missing']), -t[1]['score']))
+        self.total = len(self.sorted_results)
+
+    def get_total(self):
+        return self.total
