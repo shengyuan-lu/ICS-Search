@@ -1,6 +1,7 @@
 import re
 from nltk.stem import PorterStemmer
 
+
 def tokenize(content: 'str') -> 'list':
 
     content = content.lower()
@@ -18,13 +19,13 @@ def tokenize(content: 'str') -> 'list':
 
 # textContent = processed text from HTML
 # returns (token : {position (str) : int, occurrence (str) : int})
-def compute_word_frequencies(textContent:list) -> 'dict':
+def compute_word_frequencies(text_content: list) -> 'dict':
     ps = PorterStemmer()
     token_map = dict()
     special_map = dict() # word: freq
     weight_map = {0:10, 1:5, 2:4, 3:3, 4:2, 5:2, 6:2, 7:1}
 
-    for index, text in enumerate(textContent):
+    for index, text in enumerate(text_content):
         token_list = tokenize(text)
 
         for idx, token in enumerate(token_list):

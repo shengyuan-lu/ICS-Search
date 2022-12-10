@@ -1,6 +1,7 @@
 from Reader import Reader
 from bs4 import BeautifulSoup
 
+
 # parse(file : (int, json_dict)): -> (doc_id : int, url : str, tag_list : list)
 def parse(file: (int, dict)) -> (int, str, list):
     """
@@ -18,18 +19,6 @@ def parse(file: (int, dict)) -> (int, str, list):
     # Get the raw html content
     content = json['content']
 
-    # Turn the raw html into tokenizable text
-
-    # title
-    # h1
-    # h2
-    # h3
-    # strong
-    # b
-    # em
-
-    # body (not a tag)
-
     # Check if the html is valid
     if BeautifulSoup(content, 'html.parser').find():
 
@@ -45,6 +34,19 @@ def parse(file: (int, dict)) -> (int, str, list):
         # print(tags)
 
         # Init strings contains special tags
+
+        # Turn the raw html into tokenizable text
+
+        # title
+        # h1
+        # h2
+        # h3
+        # strong
+        # b
+        # em
+
+        # body (not a tag)
+
         title = ''
         h1 = ''
         h2 = ''
@@ -55,30 +57,42 @@ def parse(file: (int, dict)) -> (int, str, list):
 
         # For each special tags, append the corresponding string
         for tag in tags:
+
+            text = text_processing(tag.text)
+
             if tag.name == 'title':
-                title += tag.text.strip() + ' '
+                title += text + ' '
             elif tag.name == 'h1':
-                h1 += tag.text.strip() + ' '
+                h1 += text + ' '
             elif tag.name == 'h2':
-                h2 += tag.text.strip() + ' '
+                h2 += text + ' '
             elif tag.name == 'h3':
-                h3 += tag.text.strip() + ' '
+                h3 += text + ' '
             elif tag.name == 'strong':
-                strong += tag.text.strip() + ' '
+                strong += text + ' '
             elif tag.name == 'b':
-                b += tag.text.strip() + ' '
+                b += text + ' '
             elif tag.name == 'em':
-                em += tag.text.strip() + ' '
+                em += text + ' '
 
         # Get everything
-        body = soup.get_text().strip()
+        body = text_processing(soup.get_text().strip())
 
         return doc_id, url, [title.strip(), h1.strip(), h2.strip(), h3.strip(), strong.strip(), b.strip(), em.strip(), body.strip()]
 
     else:
-
         # Return a list with empty strings if the content is not valid html
         return doc_id, url, ['', '', '', '', '', '', '', '', '']
+
+
+def text_processing(text: str) -> str:
+    text = text.strip()
+    text = text.replace('\n', '')
+    text = text.replace('\r', '')
+    text = text.replace('\u00a0', '')
+    text = text.replace('\u2019', '')
+
+    return text
 
 
 if __name__ == '__main__':

@@ -1,14 +1,9 @@
-
-
 from flask import Flask, request, render_template
 import time
 from Searcher import Searcher
 import math
 
-
 app = Flask(__name__)
-
-
 
 @app.route('/search')
 def search():

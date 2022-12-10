@@ -103,7 +103,3 @@ class Memory:
 
         with open('memory_stats.txt', 'w+') as stats:
             stats.write(stat_str)
-
-
-if __name__ == '__main__':
-    pass

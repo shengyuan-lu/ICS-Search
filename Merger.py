@@ -105,7 +105,6 @@ def merger(path1: str, path2: str, out_path: str = 'Index/final_index.txt',
     os.remove(path1)
 
 
-
 def merge_folder(folder):
     """
     Merges all of the contents of a folder together
@@ -141,12 +140,6 @@ def merge_folder(folder):
 
     print(f'Merger: Finished merging {len(files_list)} files in /{folder}')
     print(f'Merger: Merged index size on disk: {kb}')
-
-
-
-# def print_txt(path):
-    # with open(path, 'r') as file:
-         # print(file.read())
 
 
 if __name__ == '__main__':
