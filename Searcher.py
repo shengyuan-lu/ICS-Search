@@ -15,7 +15,9 @@ class Searcher:
         self.file_path = os.path.dirname(os.path.abspath(__name__))
         print(self.file_path)
         final_index_path = os.path.join(self.file_path,'Index', 'final_index.txt')
-        self.final_index_file = open(final_index_path, 'r')
+
+        with open(final_index_path, 'r') as file:
+            self.final_index_file = file
 
         tokens = self.tokenize()
         print('Tokenized Query: ' + str(tokens))
@@ -24,7 +26,6 @@ class Searcher:
 
         # parse the index_of_index.json into a python dict
         # and save the result in tokenIndexJson
-        self.read_index_of_index()
         self.results = dict()
         self.read_doc_id_dict()
 
@@ -65,9 +66,8 @@ class Searcher:
 
     def read_index_of_index(self):
         complete_path = os.path.join(self.file_path,'index_of_index.json')
-        index_of_index = open(complete_path)
-        self.index_of_index_json = json.load(index_of_index)
-        index_of_index.close()
+        with open(complete_path, 'r') as index_of_index:
+            self.index_of_index_json = json.load(index_of_index)
 
 
     def compute_tfIdf(self, df, tf):
@@ -92,10 +92,10 @@ class Searcher:
 
     def read_doc_id_dict(self):
         complete_path = os.path.join(self.file_path,'doc_id_dict.json')
-        f = open(complete_path)
-        self.id_to_url = json.load(f)
-        self.total_document_count = len(self.id_to_url)
-        f.close()
+
+        with open(complete_path, 'r') as file:
+            self.id_to_url = json.load(file)
+            self.total_document_count = len(self.id_to_url)
 
 
     def get_results(self, limit = 5,page=1):
@@ -108,6 +108,7 @@ class Searcher:
     def sort_results(self):
         self.sorted_results = sorted(self.results.items(), key=lambda t: (len(t[1]['missing']), -t[1]['score']))
         self.total = len(self.sorted_results)
+
 
     def get_total(self):
         return self.total

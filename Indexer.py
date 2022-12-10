@@ -138,5 +138,5 @@ class Indexer:
 
 # The actual main function to generate the index
 if __name__ == '__main__':
-    indexer = Indexer('DEV', 'Index', 'final_index.txt')
+    indexer = Indexer('ANALYST', 'Index', 'final_index.txt')
     indexer.run()
