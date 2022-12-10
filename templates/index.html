@@ -2,6 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -26,7 +27,7 @@
       id="nav-top"
     >
       <div class="container pt-0 d-flex align-items-center">
-        <span class="me-2 fw-semibold uci-blue">ICS Search</span>
+        <a class="me-2 fw-semibold uci-blue logo" href="/">ICS Search</a>
         <form
           class="d-flex flex-grow-1"
           role="search"
@@ -47,38 +48,55 @@
         </form>
       </div>
     </div>
-    <div class="container">
-      <h1>ICS Search</h1>
-      <form
-        class="d-flex"
-        role="search"
-        id="searchform"
-        method="get"
-        action="/search"
-      >
-        <input
-          class="form-control me-2"
-          type="search"
-          placeholder="Search..."
-          aria-label="Search"
-          id="query"
-          name="query"
-        />
-        <button class="btn btn-outline-primary" type="submit">Search</button>
-      </form>
+    <header>
+      <div id="h1-container">
+        <h1 class="container text-center mb-0 uci-blue pb-2">
+          <a href="/" class="uci-blue logo">ICS Search</a>
+        </h1>
+      </div>
+      <div id="form-container">
+        <div class="container pt-0">
+          <form
+            class="d-flex shadow-sm rounded"
+            role="search"
+            id="searchform"
+            method="get"
+            action="/search"
+          >
+            <input
+              class="form-control me-0 bg-white radius-left"
+              type="search"
+              placeholder="Search..."
+              aria-label="Search"
+              id="query"
+              name="query"
+            />
+            <button
+              class="btn btn-outline-primary bg-white uci-blue radius-right border-grey border-start-0"
+              type="submit"
+            >
+              Search
+            </button>
+          </form>
+        </div>
+      </div>
+    </header>
+    <div class="container" id="results">
       {% if results|length > 0 %}
       <div class="mt-1 ms-0 de-emp">
-        Showing {{results|length}} results (<strong
+        Page {{page}} | Showing {{results|length}} of {{total}} results (<strong
           >{{ "%.2f"|format(process_time) }}</strong
         >
         ms)
       </div>
       {% endif %}
-      <section class="mt-4" id="results">
+      <section class="mt-2">
         {% if results|length > 0 %} {% for e in results %}
         <div class="result-item mb-4 ms-0">
           <h3 class="mb-1">
-            <a href="{{e.url}}" target="_blank">{{ e.url }}</a>
+            <a href="{{e.url}}" target="_blank" class="text-break"
+              >{{ e.url }}</a
+            >
           </h3>
 
           <div class="de-emp mt-0">
@@ -95,9 +113,36 @@
         </div>
         {% endif %}
       </section>
+      {% if maxpage>1 %}
+      <nav aria-label="Page navigation example">
+  <ul class="pagination justify-content-center">
+    {% if page >1  %}
+
+    <li class="page-item">
+
+      <a class="page-link" href="/search?query={{query}}&page={{page-1}}" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+    </li>
+    {% endif %}
+    {% for i in range(maxpage) %}
+    <li class="page-item {{'active' if page== (i+1)}}" aria-current="{{'page' if (page==i+1) else 'false'}}"><a class="page-link" href="/search?query={{query}}&page={{i+1}}">{{i+1}}</a></li>
+    {% endfor %}
+
+    {% if page<maxpage %}
+    <li class="page-item">
+      <a class="page-link" href="/search?query={{query}}&page={{page+1}}" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+    </li>
+    {% endif %}
+  </ul>
+</nav>
+      {% endif %}
     </div>
     <script>
       let searchform = document.getElementById("searchform");
+      let searchform_top = document.getElementById("searchform-top");
       let navtop = document.getElementById("nav-top");
       let results = document.getElementById("results");
       document.onscroll = function (e) {
@@ -117,9 +162,23 @@
         else return decodeURIComponent(results[1].replace(/\+/g, " "));
       }
       let query_input = document.getElementById("query");
+      let query_top = document.getElementById("query-top");
+      searchform_top.onsubmit = function (e) {
+        if (
+          query_top.value.trim() == "" ||
+          query_top.value.trim() == "{{query}}"
+        ) {
+          e.preventDefault();
+        } else {
+          return true;
+        }
+      };
       query_input.value = getParameterByName("query");
       searchform.onsubmit = function (e) {
-        if (query_input.value.trim() == "") {
+        if (
+          query_input.value.trim() == "" ||
+          query_input.value.trim() == "{{query}}"
+        ) {
           e.preventDefault();
         } else {
           return true;
