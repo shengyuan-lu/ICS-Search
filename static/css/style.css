@@ -1,4 +1,4 @@
-#results a:visited {
+.result-item a:visited {
   color: #681da8;
 }
 
@@ -56,7 +56,11 @@ a.logo:hover {
   color: #0064a4;
   border-color: #ced4da;
 }
-
+.pagination {
+  --bs-pagination-color: #0083b3;
+  --bs-pagination-active-bg: #0083b3;
+  --bs-pagination-active-border-color: #0083b3;
+}
 h3 {
   font-size: calc(1rem + 0.5vw);
 }
