@@ -5,7 +5,7 @@ Search Engine for UC Irvine School Of Computer Science Websites. (Python)
 - Search over 10,000 UCI ICS websites.
 - Results ranked using tf-idf calculations.
 - Fast query response time between 100 ms - 300 ms
-- Beautiful Web GUI with paginization
+- Beautiful Web GUI with pagination
 
 ## Technologies
 - Python
