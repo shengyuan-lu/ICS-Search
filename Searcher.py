@@ -4,6 +4,7 @@ import os
 from nltk.stem import PorterStemmer
 import math
 
+
 class Searcher:
 
     def __init__(self, query):
@@ -14,10 +15,8 @@ class Searcher:
         self.query = query
         self.file_path = os.path.dirname(os.path.abspath(__name__))
         print(self.file_path)
-        final_index_path = os.path.join(self.file_path,'Index', 'final_index.txt')
-
-        with open(final_index_path, 'r') as file:
-            self.final_index_file = file
+        final_index_path = os.path.join(self.file_path ,'Index', 'final_index.txt')
+        self.final_index_file = open(final_index_path, 'r')
 
         tokens = self.tokenize()
         print('Tokenized Query: ' + str(tokens))
@@ -26,11 +25,12 @@ class Searcher:
 
         # parse the index_of_index.json into a python dict
         # and save the result in tokenIndexJson
+        self.read_index_of_index()
         self.results = dict()
         self.read_doc_id_dict()
 
         for token in tokens:
-            if len(token)>3:
+            if len(token ) >3:
                 stemmed_token = ps.stem(token)
             else:
                 stemmed_token = token
@@ -50,7 +50,7 @@ class Searcher:
 
                     if docId not in self.results:
                         self.results[docId] = dict()
-                        self.results[docId]['tokens'] = {token:postings[docId]}
+                        self.results[docId]['tokens'] = {token :postings[docId]}
                         self.results[docId]['score'] = 0
                         self.results[docId]['url'] = self.id_to_url[docId]
                         self.results[docId]['missing'] = set(tokens)
@@ -65,19 +65,20 @@ class Searcher:
 
 
     def read_index_of_index(self):
-        complete_path = os.path.join(self.file_path,'index_of_index.json')
-        with open(complete_path, 'r') as index_of_index:
-            self.index_of_index_json = json.load(index_of_index)
+        complete_path = os.path.join(self.file_path ,'index_of_index.json')
+        index_of_index = open(complete_path)
+        self.index_of_index_json = json.load(index_of_index)
+        index_of_index.close()
 
 
     def compute_tfIdf(self, df, tf):
-        return (1+math.log(tf, 10)) * math.log(self.total_document_count / df, 10)
+        return ( 1 +math.log(tf, 10)) * math.log(self.total_document_count / df, 10)
 
 
     def remove_empty(self, lst):
-        if "" not in lst:
+        if '' not in lst:
             return lst
-        lst.remove("")
+        lst.remove('')
         return self.remove_empty(lst)
 
 
@@ -91,16 +92,16 @@ class Searcher:
 
 
     def read_doc_id_dict(self):
-        complete_path = os.path.join(self.file_path,'doc_id_dict.json')
+        complete_path = os.path.join(self.file_path ,'doc_id_dict.json')
+        f = open(complete_path)
+        self.id_to_url = json.load(f)
+        self.total_document_count = len(self.id_to_url)
+        f.close()
 
-        with open(complete_path, 'r') as file:
-            self.id_to_url = json.load(file)
-            self.total_document_count = len(self.id_to_url)
 
+    def get_results(self, limit = 5 ,page=1):
 
-    def get_results(self, limit = 5,page=1):
-        
-        result = map(lambda t:t[1], self.sorted_results[((page-1)*limit):((page-1)*limit+limit)])
+        result = map(lambda t :t[1], self.sorted_results[((page - 1 ) * limit):((page - 1 ) * limit + limit)])
 
         return list(result)
 

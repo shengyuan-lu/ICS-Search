@@ -22,23 +22,17 @@ def search():
 
     print('Original Query: ' + query)
 
-
     search_query = Searcher(query)
     results = search_query.get_results(limit=10, page=page)
-
 
     total = min(search_query.get_total(),50)
 
     maxpage = math.ceil(total / 10)
 
-
-
-
     end_time = time.time()
 
-
-    return render_template('index.html', results = results, process_time = (end_time-start_time)*1000, query = query,total = total,
-                           page = page,maxpage=maxpage)
+    return render_template('index.html', results = results, process_time = (end_time-start_time)*1000, query = query, total = total,
+                           page = page, maxpage=maxpage)
 
 
 @app.route('/')
