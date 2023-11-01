@@ -14,11 +14,6 @@ Search Engine for UC Irvine School Of Computer Science Websites. (Python)
 - Javascript
 - JSON
 
-## Try It Yourself:
-[ICS Search](http://bigfatshort.pythonanywhere.com/)
-
-Hosted using PythonAnywhere free version, so query response time is a bit slower.
-
 ## Screenshots
 <img width="1439" alt="homepage" src="https://user-images.githubusercontent.com/70995597/206884459-37897a84-1311-47b2-b5ac-f4b0a8d37301.png">
 
